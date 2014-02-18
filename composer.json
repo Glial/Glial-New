@@ -20,7 +20,5 @@
                                                                         "phpunit/phpunit": "3.7.24",
                                                                                 "fabpot/php-cs-fixer" : "*",
                                                                                         "phpdocumentor/phpdocumentor": "*"
-                                                                                            },
-
-
+                                                                                            }
 }
