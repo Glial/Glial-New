@@ -3,7 +3,9 @@ To install a new project working with Glial :
 
 
 install composer
+
 `$ curl -sS https://getcomposer.org/installer | php
+
 $ mv composer.phar /usr/local/bin/composer`
 
 
@@ -17,7 +19,9 @@ update `webroot.config.php`
 
 
 `cd myproject/application/webroot
+
 php index.php administration admin_table
+
 php index.php administration admin_init`
 
 
