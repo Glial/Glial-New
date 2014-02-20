@@ -1,0 +1,24 @@
+{
+    "name": "glial/new-project",
+        "version": "0.1",
+                "license": "GPL-3.0",
+                        "description": "Create a new project with Glial",
+                            "authors": [
+                                        {
+                                                        "name": "Aurélien LEQUOY",
+                                                                        "email": "aurelien.lequoy@gmail.com",
+                                                                                    "homepage": "http://www.estrildidae.net",
+                                                                                                "role": "Developer"
+                                                                                                        }
+        ],
+               "require": {
+                          "php": ">=5.5.0",
+                          
+                                         "ext-gd" : "*",
+                                                        "ext-mcrypt" : "*",
+                                                                "glial/glial": "2.1.0",
+                                                                        "phpunit/phpunit": "3.7.24",
+                                                                                "fabpot/php-cs-fixer" : "*"
+                                                                                        
+                                                                                            }
+}
