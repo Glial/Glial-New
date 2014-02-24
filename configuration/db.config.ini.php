@@ -7,13 +7,7 @@
 
 [default]
 driver=mysql
-hostname=188.165.203.77
-user=species_home
-password='Marneuse2540$'
-database=species
-[mysql_write]
-driver=mysql
-hostname=188.165.203.77
-user=species_home
-password='Marneuse2540$'
-database=species
+hostname=localhost
+user=root
+password=
+database=test
