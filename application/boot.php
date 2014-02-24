@@ -46,6 +46,7 @@ use \Glial\Synapse\Config;
 
 try {
 
+
     spl_autoload_register(function($className) {
 
                 //echo LIBRARY . str_replace('\\', DIRECTORY_SEPARATOR, ltrim($className, '\\')) . '.php';
@@ -57,6 +58,7 @@ try {
                     require(APP_DIR . DS . "controller" . DS . $className . '.controller.php');
                 }
             });
+
 
     $_POST = ArrayTools::array_map_recursive("htmlentities", $_POST);
 
