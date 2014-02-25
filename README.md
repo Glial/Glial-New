@@ -10,7 +10,7 @@ install composer
 
 
 install a new project (install in current directory, will create a new dir)
-`$ composer create-project glial/glial/new-project myproject`
+`$ composer create-project glial/new-project myproject`
 
 
 update `configuration/db.config.ini.php`
