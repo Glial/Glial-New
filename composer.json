@@ -16,7 +16,7 @@
                           
                                          "ext-gd" : "*",
                                                         "ext-mcrypt" : "*",
-                                                                "glial/glial": "2.1.1",
+                                                                "glial/glial": "2.*",
                                                                         "phpunit/phpunit": "3.7.24",
                                                                                 "fabpot/php-cs-fixer" : "*"
                                                                                         
