@@ -6,7 +6,7 @@
  *
  * Handles loading of core files needed on every request
  *
- * PHP versions 5.3
+ * PHP versions 5.5
  *
  * GLIALE(tm) : Rapid Development Framework (http://gliale.com)
  * Copyright 2008-2012, Esysteme Software Foundation, Inc. (http://www.esysteme.com)
@@ -15,7 +15,7 @@
  * Redistributions of files must retain the above copyright notice.
  *
  * @copyright     Copyright 2007-2010, Esysteme Software Foundation, Inc. (http://www.esysteme.com)
- * @link          http://www.gliale.com GLIALE(tm) Project
+ * @link          http://www.glial.com GLIALE(tm) Project
  * @package       gliale
  * @subpackage    gliale.app.webroot
  * @since         Gliale(tm) v 0.1
@@ -43,6 +43,7 @@ use \Glial\Sgbd\Sql\FactorySql;
 use \Glial\Tools\ArrayTools;
 use \Glial\I18n\I18n;
 use \Glial\Synapse\Config;
+use \Glial\Acl\Acl;
 
 try {
 
@@ -115,6 +116,7 @@ try {
     if (empty($_SESSION['language'])) {
         $_SESSION['language'] = "en";
     }
+	(ENVIRONEMENT) ? $_DEBUG->save("Language loaded") : "";
 
     $lg = explode(",", LANGUAGE_AVAILABLE);
 
@@ -124,7 +126,7 @@ try {
         header("location: " . WWW_ROOT . "en/error/_404/");
     }
 
-
+	(ENVIRONEMENT) ? $_DEBUG->save("Language loaded") : "";
     I18n::load($_SESSION['language']);
     (ENVIRONEMENT) ? $_DEBUG->save("Language loaded") : "";
 
@@ -150,7 +152,7 @@ try {
             echo "Number of param incorect\n";
             echo "Usage :\n";
             echo "php index.php controlleur action [params]\n";
-            die();
+            exit;
         }
     } else {  //mode with apache
         define('LINK', WWW_ROOT . I18n::Get() . "/");
@@ -160,6 +162,10 @@ try {
         $GLOBALS['_SITE']['IdUser'] = -1;
         $GLOBALS['_SITE']['id_group'] = 1;
 
+		
+		
+		
+		
         if (!empty($_COOKIE['IdUser']) && !empty($_COOKIE['Passwd'])) {
             $sql = "select * from user_main where id = '" . $_DB['mysql_write']->sql_real_escape_string($_COOKIE['IdUser']) . "'";
 
@@ -204,41 +210,46 @@ try {
         $_SYSTEM['action'] = $url['action'];
         $_SYSTEM['param'] = $url['param'];
 
-        $dir = TMP . "acl" . DS . "acl.txt";
+		
+		$acl = new Acl();
+		
 
-        if (!file_exists($dir)) {
-            echo 'No right defined, please execute : "php index.php administration admin_init"';
-            exit;
-        }
+		
+		
+		
+        if (! $acl->isAllowed($GLOBALS['_SITE']['id_group'],$_SYSTEM['controller']."/".$_SYSTEM['action'])) {
+			if ($acl->checkIfResourceExist($_SYSTEM['controller']."/".$_SYSTEM['action']))
+			{
+				if ($_SYSTEM['controller'] !== "" && $_SYSTEM['action'] !== "") {
+					if ($GLOBALS['_SITE']['id_group'] == 1) {
 
-        $GLOBALS['_SYSTEM']['acl'] = unserialize(file_get_contents($dir));
-
-
-        if (empty($GLOBALS['_SYSTEM']['acl'][$GLOBALS['_SITE']['id_group']][$_SYSTEM['controller']][$_SYSTEM['action']])) {
-
-            //|| $GLOBALS['_SYSTEM']['acl'][$GLOBALS['_SITE']['id_group']][$_SYSTEM['controller']][$_SYSTEM['action']] != 1)
-            if ($_SYSTEM['controller'] !== "" && $_SYSTEM['action'] !== "") {
-                if ($GLOBALS['_SITE']['id_group'] == 1) {
-
-                    $url = "user/register/";
-                    $msg = $_SYSTEM['controller'] . "/" . $_SYSTEM['action'] . "<br />" . __("You have to be registered to acces to this page");
-                } else {
-                    //die("here");
-                    $url = "home/index/";
-                    $msg = $_SYSTEM['controller'] . "/" . $_SYSTEM['action'] . "<br />" . __("Your rank to this website is not enough to acess to this page");
-                }
+						$url = "user/register/";
+						$msg = $_SYSTEM['controller'] . "/" . $_SYSTEM['action'] . "<br />" . __("You have to be registered to acces to this page");
+					} else {
+						//die("here");
+						$url = "home/index/";
+						$msg = $_SYSTEM['controller'] . "/" . $_SYSTEM['action'] . "<br />" . __("Your rank to this website is not enough to acess to this page");
+					}
 
 
-                set_flash("error", __("Acess denied"), __("Acess denied") . " : " . $msg);
+					set_flash("error", __("Acess denied"), __("Acess denied") . " : " . $msg);
 
-                //debug($_SYSTEM);
 
-                header("location: " . LINK . $url);
-                exit;
-                //die("ERROR access");
-            }
+					header("location: " . LINK . $url);
+					exit;
+				}
+			}
+			else
+			{
+				set_flash("error", __("Error 404"), __("Page not found") . " : " . __("Sorry, the page you requested is not on this server. Please contact us if you have questions or concerns"));
+				header("location: " . LINK . "Error/_404");
+				exit;
+			
+			}
         }
     }
+	
+	
     (ENVIRONEMENT) ? $_DEBUG->save("ACL loaded") : "";
 
     //demarre l'application
