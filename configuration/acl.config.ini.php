@@ -16,6 +16,7 @@ add[] = 4;SuperAdmin
 [allow]
 3[] = Home/index
 1[] = Home/index
-
+1[] = Layout/header
+1[] = Layout/footer
 
 

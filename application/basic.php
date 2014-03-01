@@ -1,6 +1,6 @@
 <?php
 
-use \Glial\I18n\I18n;
+
 use \Glial\Shell\Color;
 
 /**
@@ -52,52 +52,6 @@ function debug($var = false, $showHtml = false, $showFrom = true)
     }
 }
 
-function __($text, $lgfrom = "auto")
-{
-
-
-    if ($lgfrom == "auto")
-        $lgfrom = I18n::GetDefault();
-    $calledFrom = debug_backtrace();
-//return "<span id=\"".sha1($text)."\" lang=\"".$_LG->Get()."\">".$_LG->_($text,$lgfrom,$calledFrom[0]['file'],$calledFrom[0]['line'])."</span>";
-
-    $var = I18n::_($text, $lgfrom, $calledFrom[0]['file'], $calledFrom[0]['line']);
-
-    if (preg_match_all('#\[(\w+)]#', $var, $m)) {
-//print_r( $m );
-    }
-
-
-    if (count($m[1]) > 0) {
-        $replace_with = array();
-
-        foreach ($m[1] as $species) {
-            $scientific_name = str_replace("_", " ", $species);
-
-            $sql = "SELECT b.text 
-				FROM species_main a
-				
-				inner JOIN scientific_name_translation b ON a.id = b.id_species_main AND b.id_species_sub = 0 and b.is_valid=1
-				INNER JOIN language c ON c.iso3 = b.language AND c.iso = '" . I18n::Get() . "'
-			where a.scientific_name ='" . $scientific_name . "'";
-            $res = I18n::getDb()->sql_query($sql);
-
-
-            if (I18n::getDb()->sql_num_rows($res) == 1) {
-                $ob = I18n::getDb()->sql_fetch_object($res);
-                $replace_with[] = $ob->text . " (" . $scientific_name . ")";
-            } else {
-                $replace_with[] = $scientific_name;
-            }
-        }
-
-        $var = str_replace($m[0], $replace_with, $var);
-    }
-
-
-
-    return $var;
-}
 
 function from()
 {
@@ -349,4 +303,3 @@ function error_msg($table, $field)
     }
 }
 
-?>

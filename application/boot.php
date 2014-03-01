@@ -23,31 +23,39 @@
  */
 header("Charset: UTF-8");
 
+ini_set('error_log', TMP . 'log' . DS . 'error_php.log');
+ini_set('APACHE_LOG_DIR', TMP . 'log' . DS);
+
 
 //tput cols tells you the number of columns.
 //tput lines tells you the number of rows.
 
-require ROOT.DS.'vendor/autoload.php';
-
-
-ini_set('error_log', TMP . 'log' . DS . 'error_php.log');
-ini_set('APACHE_LOG_DIR', TMP . 'log' . DS);
-
-session_start();
-
-use \Glial\Synapse\Singleton;
+use \Glial\Synapse\Config;
 use \Glial\Debug\Debug;
+use \Glial\Synapse\Singleton;
 use \Glial\Synapse\Statistics;
 use \Glial\Synapse\FactoryController;
 use \Glial\Sgbd\Sql\FactorySql;
 use \Glial\Tools\ArrayTools;
 use \Glial\I18n\I18n;
-use \Glial\Synapse\Config;
 use \Glial\Acl\Acl;
 
+
+require ROOT.DS.'vendor/autoload.php';
+
+session_start();
+
 try {
+    $config = new Config;
+    $config->load(CONFIG);
 
 
+    if (ENVIRONEMENT) {
+        $_DEBUG = new Debug;
+        $_DEBUG->save("Starting...");
+    }
+    
+    
     spl_autoload_register(function($className) {
 
                 //echo LIBRARY . str_replace('\\', DIRECTORY_SEPARATOR, ltrim($className, '\\')) . '.php';
@@ -64,14 +72,7 @@ try {
     $_POST = ArrayTools::array_map_recursive("htmlentities", $_POST);
 
 
-    $config = new Config;
-    $config->load(CONFIG);
 
-
-    if (ENVIRONEMENT) {
-        $_DEBUG = new Debug;
-        $_DEBUG->save("Starting...");
-    }
 
     //include LIB . 'sql' . DS . 'pdo_sqlsrv' . '.lib.php';
     //$paths = array(LIBRARY, '.');
@@ -109,14 +110,13 @@ try {
 
 
     I18n::injectDb($_DB['default']);
-
     I18n::SetDefault("en");
     I18n::SetSavePath(TMP . "translations");
 
     if (empty($_SESSION['language'])) {
         $_SESSION['language'] = "en";
     }
-	(ENVIRONEMENT) ? $_DEBUG->save("Language loaded") : "";
+
 
     $lg = explode(",", LANGUAGE_AVAILABLE);
 
@@ -126,7 +126,6 @@ try {
         header("location: " . WWW_ROOT . "en/error/_404/");
     }
 
-	(ENVIRONEMENT) ? $_DEBUG->save("Language loaded") : "";
     I18n::load($_SESSION['language']);
     (ENVIRONEMENT) ? $_DEBUG->save("Language loaded") : "";
 
@@ -162,10 +161,6 @@ try {
         $GLOBALS['_SITE']['IdUser'] = -1;
         $GLOBALS['_SITE']['id_group'] = 1;
 
-		
-		
-		
-		
         if (!empty($_COOKIE['IdUser']) && !empty($_COOKIE['Passwd'])) {
             $sql = "select * from user_main where id = '" . $_DB['mysql_write']->sql_real_escape_string($_COOKIE['IdUser']) . "'";
 
@@ -213,10 +208,6 @@ try {
 		
 		$acl = new Acl();
 		
-
-		
-		
-		
         if (! $acl->isAllowed($GLOBALS['_SITE']['id_group'],$_SYSTEM['controller']."/".$_SYSTEM['action'])) {
 			if ($acl->checkIfResourceExist($_SYSTEM['controller']."/".$_SYSTEM['action']))
 			{
@@ -253,21 +244,23 @@ try {
     (ENVIRONEMENT) ? $_DEBUG->save("ACL loaded") : "";
 
     //demarre l'application
-
-
     FactoryController::rootNode($_SYSTEM['controller'], $_SYSTEM['action'], $_SYSTEM['param']);
 
 
-
-
+    
+    
     (ENVIRONEMENT) ? $_DEBUG->save("Layout loaded") : "";
 
     if ((ENVIRONEMENT) && (!IS_CLI) && (!IS_AJAX)) {//ENVIRONEMENT
         $execution_time = microtime(true) - TIME_START;
 
         echo "<hr />";
+
         echo "Temps d'exéution de la page : " . round($execution_time, 5) . " seconds";
         echo "<br />Nombre de requette : " . $_DB['mysql_write']->get_count_query();
+        $file_list = get_included_files();
+        echo "<br />Nombre de fichier loaded : <b>".count($file_list)."</b><br />";
+        debug($file_list);
 
         if ($_DB['mysql_write']->get_count_query() != 0) {
             echo "<table class=\"debug\">";
@@ -290,6 +283,7 @@ try {
         echo $_DEBUG->graph2();
 
 
+        //debug(get_declared_classes());
 
         echo "SESSION";
         debug($_SESSION);

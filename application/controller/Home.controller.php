@@ -15,8 +15,7 @@ class Home extends Controller
 		
 		//$this->javascript = array("");
 		
-		$acl = new Acl();
-		
+        $acl = new Acl();
 		$this->set('acl',$acl);
 		
 	}

@@ -5,9 +5,11 @@ use \Glial\Synapse\Controller;
 
 class Layout extends Controller
 {
-	function header()
+	function header($title)
 	{
-		
+		debug( $title);
+        
+        $this->set('GLIALE_TITLE',$title);
 	}
 	
 	

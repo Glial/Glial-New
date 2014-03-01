@@ -7,7 +7,7 @@ echo "<html lang=\"" . I18n::Get() . "\">";
 
 echo "<head>\n";
 echo "<meta charset=utf-8 />\n";
-echo "<meta name=\"Keywords\" content=\"Etrildidae,Estrildidés,????,????????????,forum,news,photos,videos,[PAGE_KEYWORDS]\" />\n";
+echo "<meta name=\"Keywords\" content=\"Etrildidae,Estrildidï¿½s,????,????????????,forum,news,photos,videos,[PAGE_KEYWORDS]\" />\n";
 echo "<meta name=\"Description\" content=\"[PAGE_DESCRIPTION]\" />\n";
 echo "<meta name=\"Author\" content=\"Aurelien LEQUOY\" />\n";
 echo "<meta name=\"robots\" content=\"index,follow,all\" />\n";
