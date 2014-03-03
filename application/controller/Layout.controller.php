@@ -2,19 +2,17 @@
 
 use \Glial\Synapse\Controller;
 
-
 class Layout extends Controller
 {
-	function header($title)
-	{
-		debug( $title);
+
+    function header($title)
+    {
+        $this->set('GLIALE_TITLE', $title);
+    }
+
+    function footer()
+    {
         
-        $this->set('GLIALE_TITLE',$title);
-	}
-	
-	
-	function footer()
-	{
-		
-	}
+    }
+
 }

@@ -7,16 +7,13 @@ class Home extends Controller
 {
 	function index()
 	{
-		//$this->layout_name = 'default';
+		$this->layout_name = 'default';
 		
 		
 		$this->title = __("Home");
 		$this->ariane = " > ".__("Welcome to my first page with Glial !");
 		
 		//$this->javascript = array("");
-		
-        $acl = new Acl();
-		$this->set('acl',$acl);
 		
 	}
 }
