@@ -20,17 +20,10 @@
  </head>
  <body>
 
-
- <header>
- <div id="headline">
-
- </div>
-
- <div id="banner">
- </div>
- <menu>
-
-
- </menu>
- </header>
- <div id="main">
+<div id="all">
+<header>
+<div id="headline"></div>
+<div id="banner"></div>
+<menu></menu>
+</header>
+<div id="main">
