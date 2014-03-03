@@ -9,6 +9,7 @@ if (in_array("mod_rewrite",apache_get_modules()))
 	echo "<li>Debian / Ubuntu : vi /etc/apache2/sites-enabled/000-default</li>";
 	echo "<li>RedHat / Centos / Fedhora : vi /etc/httpd/sites-enabled/000-default</li>";
 	echo "</ul>";
+	echo "After update this file think to 'service apache2 restart'";
 }
 else
 {
