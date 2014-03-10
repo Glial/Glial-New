@@ -219,8 +219,8 @@ try {
 
 
         $acl = new Acl(CONFIG . "acl.config.ini");
-       // echo $GLOBALS['_SITE']['id_group'].' -- '. $_SYSTEM['controller'] . "/" . $_SYSTEM['action'];
- 
+        // echo $GLOBALS['_SITE']['id_group'].' -- '. $_SYSTEM['controller'] . "/" . $_SYSTEM['action'];
+
 
         if (!$acl->isAllowed($GLOBALS['_SITE']['id_group'], $_SYSTEM['controller'] . "/" . $_SYSTEM['action'])) {
             if ($acl->checkIfResourceExist($_SYSTEM['controller'] . "/" . $_SYSTEM['action'])) {
@@ -239,8 +239,8 @@ try {
                     set_flash("error", __("Acess denied"), __("Acess denied") . " : " . $msg);
 
 
-                    
-                    
+
+
                     header("location: " . LINK . $url);
                     exit;
                 }
@@ -258,6 +258,11 @@ try {
 
     //demarre l'application
     FactoryController::rootNode($_SYSTEM['controller'], $_SYSTEM['action'], $_SYSTEM['param']);
+
+    
+    $i = 10;
+
+
 
 
 
