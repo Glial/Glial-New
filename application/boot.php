@@ -118,10 +118,15 @@ try {
 
     $lg = explode(",", LANGUAGE_AVAILABLE);
 
+    
+    //debug($lg);
+    
+    
     if (!in_array($_SESSION['language'], $lg)) {
         //die("language error !");
         $_SESSION['URL_404'] = $_SERVER['QUERY_STRING'];
         header("location: " . WWW_ROOT . "en/error/_404/");
+        exit;
     }
 
     I18n::load($_SESSION['language']);
@@ -156,7 +161,7 @@ try {
         define('LINK', WWW_ROOT . I18n::Get() . "/");
 
 
-        $auth = new Auth();
+        /*$auth = new Auth();
         $auth->setInstance($_DB['default'], "user_main", array("login", "password"));
 
         $auth->setFctToHashCookie(function ($password) {
@@ -166,7 +171,7 @@ try {
         if (!$auth->authenticate("xdrfgwdfg", "xfgxfg")) {
             echo "pas logger";
         }
-
+         */
 
         // remplacer par le code en dessous
 
@@ -216,10 +221,16 @@ try {
         $_SYSTEM['controller'] = \Glial\Utility\Inflector::camelize($url['controller']);
         $_SYSTEM['action'] = $url['action'];
         $_SYSTEM['param'] = $url['param'];
+        
+        if ($_SYSTEM['action'] === "favicon.ico")
+        {
+            exit;
+        }
 
 
         $acl = new Acl(CONFIG . "acl.config.ini");
-        // echo $GLOBALS['_SITE']['id_group'].' -- '. $_SYSTEM['controller'] . "/" . $_SYSTEM['action'];
+       // echo $GLOBALS['_SITE']['id_group'].' -- '. $_SYSTEM['controller'] . "/" . $_SYSTEM['action'];
+
 
 
         if (!$acl->isAllowed($GLOBALS['_SITE']['id_group'], $_SYSTEM['controller'] . "/" . $_SYSTEM['action'])) {
@@ -239,12 +250,15 @@ try {
                     set_flash("error", __("Acess denied"), __("Acess denied") . " : " . $msg);
 
 
-
-
+                    
+                    
                     header("location: " . LINK . $url);
                     exit;
                 }
             } else {
+                
+                
+                
                 set_flash("error", __("Error 404"), __("Page not found") . " : " . __("Sorry, the page you requested is not on this server. Please contact us if you have questions or concerns"));
                 header("location: " . LINK . "Error/_404");
                 exit;
@@ -259,15 +273,12 @@ try {
     //demarre l'application
     FactoryController::rootNode($_SYSTEM['controller'], $_SYSTEM['action'], $_SYSTEM['param']);
 
-    
-    $i = 10;
-
-
-
 
 
     (ENVIRONEMENT) ? $_DEBUG->save("Layout loaded") : "";
 
+    
+    
     if ((ENVIRONEMENT) && (!IS_CLI) && (!IS_AJAX)) {//ENVIRONEMENT
         $execution_time = microtime(true) - TIME_START;
 
@@ -338,9 +349,9 @@ try {
 }
 finally {
     if (!IS_CLI) {
-        /*
-          $stat = new Statistics;
-          $stat->getData($GLOBALS['_SITE']['IdUser']);
-          $stat->callDeamon(); */
+        
+          //$stat = new Statistics;
+          //$stat->getData($GLOBALS['_SITE']['IdUser']);
+          //$stat->callDeamon(); 
     }
 }
