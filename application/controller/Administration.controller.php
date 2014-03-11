@@ -1,6 +1,7 @@
 <?php
 
 use \Glial\Synapse\Controller;
+use \Glial\Utility\Inflector;
 
 class Administration extends Controller
 {
@@ -90,7 +91,6 @@ class Administration extends Controller
         $this->admin_index_unique();
         $this->admin_table();
         $this->generate_model();
-        
     }
 
     function install()
@@ -98,93 +98,101 @@ class Administration extends Controller
         $this->all();
     }
 
-    
-
-
     function generate_model()
     {
 
         //php index.php administration generate_model
 
         $this->layout_name = false;
+        $this->view = false;
 
-        $sql = "SELECT * FROM INFORMATION_SCHEMA.TABLES where TABLE_SCHEMA ='species' and TABLE_TYPE = 'BASE TABLE'";
-        $res = $this->db['default']->sql_query($sql);
+        foreach ($this->db as $key => $dbLink) {
 
-        while ($ob2 = $this->db['default']->sql_fetch_object($res)) {
+            $tab_object = $dbLink->getListTable();
 
-            $table = $ob2->TABLE_NAME;
+            foreach ($tab_object['table'] as $table_name) {
 
-            $file = APP_DIR . "/model/" . $table . ".php";
+                $table = $table_name;
 
-            if (!file_exists($file)) {
-                $fp = fopen($file, "w");
+                $model_name = "Identifier" . Inflector::camelize($key);
+                $dir = APP_DIR . "/model/" . $key;
 
-                echo "FILE : " . $file . "\n";
-
-                $text = "<?php\n\nnamespace Application\Model;
-use \Glial\Synapse\Model;
-
-class " . $table . " extends Model\n{\nvar \$schema = \"";
-
-                $sql = "SHOW CREATE TABLE `" . $table . "`";
-                $res2 = $this->db['default']->sql_query($sql);
-
-                $array = $this->db['default']->sql_fetch_array($res2);
-
-                $sql = "DESCRIBE `" . $table . "`";
-                $res3 = $this->db['default']->sql_query($sql);
-
-                $i = 0;
-
-                unset($data);
-                unset($field);
-
-                while ($ob = $this->db['default']->sql_fetch_object($res3)) {
-                    $field[] = "\"" . $ob->Field . "\"";
-
-                    $data[$table][$i]['field'] = $ob->Field;
-                    $data[$table][$i]['type'] = $ob->Type;
-                    $i++;
+                if (!is_dir($dir)) {
+                    mkdir($dir);
                 }
 
-                $text .= $array[1];
-                $text .= "\";\n\nvar \$field = array(" . implode(",", $field) . ");\n\nvar \$validate = array(\n";
+                $file = $dir . "/" . $table . ".php";
 
-                foreach ($data[$table] as $field) {
-                    if ($field['field'] == "id") {
-                        continue;
+                if (!file_exists($file)) {
+                    $fp = fopen($file, "w");
+
+                    echo "FILE : " . $file . "\n";
+
+                    $text = "<?php\n\nnamespace Application\Model\\" . $model_name . ";\n";
+                    $text .= "use \Glial\Synapse\Model;\n";
+                    $text .= "class " . $table . " extends Model\n{\nvar \$schema = \"";
+
+                    $sql = "SHOW CREATE TABLE `" . $table . "`";
+                    $res2 = $dbLink->sql_query($sql);
+
+                    $array = $dbLink->sql_fetch_array($res2);
+
+                    $sql = "DESCRIBE `" . $table . "`";
+                    $res3 = $dbLink->sql_query($sql);
+
+                    $i = 0;
+
+                    unset($data);
+                    unset($field);
+
+                    while ($ob = $dbLink->sql_fetch_object($res3)) {
+                        $field[] = "\"" . $ob->Field . "\"";
+
+                        $data[$table][$i]['field'] = $ob->Field;
+                        $data[$table][$i]['type'] = $ob->Type;
+                        $i++;
                     }
-                    if (mb_substr($field['field'], 0, 2) === "id") {
-                        $text .= "\t'" . $field['field'] . "' => array(\n\t\t'reference_to' => array('The constraint to " . mb_substr($field['field'], 3) . ".id isn\'t respected.','" . mb_substr($field['field'], 3) . "', 'id')\n\t),\n";
-                    } elseif (mb_substr($field['field'], 0, 2) === "ip") {
-                        $text .= "\t'" . $field['field'] . "' => array(\n\t\t'ip' => array('your IP is not valid')\n\t),\n";
-                    } elseif ($field['field'] === "email") {
-                        $text .= "\t'" . $field['field'] . "' => array(\n\t\t'email' => array('your email is not valid')\n\t),\n";
-                    } else {
 
-                        if (mb_strstr($field['type'], "int")) {
-                            $text .= "\t'" . $field['field'] . "' => array(\n\t\t'numeric' => array('This must be an int.')\n\t),\n";
-                        } elseif (mb_strstr($field['type'], "time")) {
-                            $text .= "\t'" . $field['field'] . "' => array(\n\t\t'time' => array('This must be a time.')\n\t),\n";
-                        } elseif (mb_strstr($field['type'], "date")) {
-                            $text .= "\t'" . $field['field'] . "' => array(\n\t\t'date' => array('This must be a date.')\n\t),\n";
-                        } elseif (mb_strstr($field['type'], "datetime")) {
-                            $text .= "\t'" . $field['field'] . "' => array(\n\t\t'not_empty' => array('This must be a date time.')\n\t),\n";
-                        } elseif (mb_strstr($field['type'], "float")) {
-                            $text .= "\t'" . $field['field'] . "' => array(\n\t\t'decimal' => array('This must be a float.')\n\t),\n";
+                    $text .= $array[1];
+                    $text .= "\";\n\nvar \$field = array(" . implode(",", $field) . ");\n\nvar \$validate = array(\n";
+
+                    foreach ($data[$table] as $field) {
+                        if ($field['field'] == "id") {
+                            continue;
+                        }
+                        if (mb_substr($field['field'], 0, 2) === "id") {
+                            $text .= "\t'" . $field['field'] . "' => array(\n\t\t'reference_to' => array('The constraint to " . mb_substr($field['field'], 3) . ".id isn\'t respected.','" . mb_substr($field['field'], 3) . "', 'id')\n\t),\n";
+                        } elseif (mb_substr($field['field'], 0, 2) === "ip") {
+                            $text .= "\t'" . $field['field'] . "' => array(\n\t\t'ip' => array('your IP is not valid')\n\t),\n";
+                        } elseif ($field['field'] === "email") {
+                            $text .= "\t'" . $field['field'] . "' => array(\n\t\t'email' => array('your email is not valid')\n\t),\n";
                         } else {
-                            $text .= "\t'" . $field['field'] . "' => array(\n\t\t'not_empty' => array('This field is requiered.')\n\t),\n";
+
+                            if (mb_strstr($field['type'], "int")) {
+                                $text .= "\t'" . $field['field'] . "' => array(\n\t\t'numeric' => array('This must be an int.')\n\t),\n";
+                            } elseif (mb_strstr($field['type'], "datetime")) {
+                                $text .= "\t'" . $field['field'] . "' => array(\n\t\t'datetime' => array('This must be a date time.')\n\t),\n";
+                            } elseif (mb_strstr($field['type'], "time")) {
+                                $text .= "\t'" . $field['field'] . "' => array(\n\t\t'time' => array('This must be a time.')\n\t),\n";
+                            } elseif (mb_strstr($field['type'], "date")) {
+                                $text .= "\t'" . $field['field'] . "' => array(\n\t\t'date' => array('This must be a date.')\n\t),\n";
+                            } elseif (mb_strstr($field['type'], "float")) {
+                                $text .= "\t'" . $field['field'] . "' => array(\n\t\t'decimal' => array('This must be a float.')\n\t),\n";
+                            } else {
+                                $text .= "\t'" . $field['field'] . "' => array(\n\t\t'not_empty' => array('This field is requiered.')\n\t),\n";
+                            }
                         }
                     }
+
+                    $text .= ");\n\nfunction get_validate()\n{\nreturn \$this->validate;\n}\n}\n";
+
+                    fwrite($fp, $text);
+                    fclose($fp);
+
+                    unset($data);
+                } else {
+                    echo "FILE : " . $file . " already exist\n";
                 }
-
-                $text .= ");\n\nfunction get_validate()\n{\nreturn \$this->validate;\n}\n}\n";
-
-                fwrite($fp, $text);
-                fclose($fp);
-
-                unset($data);
             }
         }
     }
