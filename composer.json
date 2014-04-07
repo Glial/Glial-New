@@ -17,8 +17,8 @@
         "glial/glial": "dev-master",
         "phpunit/phpunit": "3.7.*",
         "fabpot/php-cs-fixer" : "*"
-    }
+    },
     "scripts": {
-        "post-update-cmd": "MyVendor\\MyClass::postUpdate",
+        "post-update-cmd": "php glial"
     }
 }
