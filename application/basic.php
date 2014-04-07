@@ -31,7 +31,7 @@ function debug($var = false, $showHtml = false, $showFrom = true)
 {
     if (IS_CLI) {
         $calledFrom = debug_backtrace();
-        echo Color::getColoredString(substr(str_replace(ROOT, '', $calledFrom[0]['file']), 1).' (line ' . $calledFrom[0]['line'] . ')', "white", "blue") . "\n";
+        echo Color::getColoredString(substr(str_replace(ROOT, '', $calledFrom[0]['file']), 1).' (line ' . $calledFrom[0]['line'] . ')', "grey", "blue") . "\n";
         print_r($var);
     } else {
         if (ENVIRONEMENT) {
