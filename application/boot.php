@@ -116,7 +116,16 @@ if (empty($_SESSION['language'])) {
 }
 
 
-$lg = explode(",", LANGUAGE_AVAILABLE);
+    
+    //debug($lg);
+    
+    
+    if (!in_array($_SESSION['language'], $lg)) {
+        //die("language error !");
+        $_SESSION['URL_404'] = $_SERVER['QUERY_STRING'];
+        header("location: " . WWW_ROOT . "en/error/_404/");
+        exit;
+    }
 
 if (!in_array($_SESSION['language'], $lg)) {
     //die("language error !");
@@ -155,6 +164,8 @@ if (IS_CLI) {
 } else {  //mode with apache
     define('LINK', WWW_ROOT . I18n::Get() . "/");
 
+        /*$auth = new Auth();
+        $auth->setInstance($_DB['default'], "user_main", array("login", "password"));
 
     $auth = new Auth();
     $auth->setInstance($_DB['default'], "user_main", array("login", "password"));
@@ -166,6 +177,10 @@ if (IS_CLI) {
     if (!$auth->authenticate("xdrfgwdfg", "xfgxfg")) {
         echo "pas logger";
     }
+        if (!$auth->authenticate("xdrfgwdfg", "xfgxfg")) {
+            echo "pas logger";
+        }
+         */
 
 
     // remplacer par le code en dessous
@@ -219,7 +234,6 @@ if (IS_CLI) {
 
 
     $acl = new Acl(CONFIG . "acl.config.ini");
-    // echo $GLOBALS['_SITE']['id_group'].' -- '. $_SYSTEM['controller'] . "/" . $_SYSTEM['action'];
 
 
     if (!$acl->isAllowed($GLOBALS['_SITE']['id_group'], $_SYSTEM['controller'] . "/" . $_SYSTEM['action'])) {
@@ -241,7 +255,17 @@ if (IS_CLI) {
 
 
 
-                header("location: " . LINK . $url);
+                    
+                    
+                    header("location: " . LINK . $url);
+                    exit;
+                }
+            } else {
+                
+                
+                
+                set_flash("error", __("Error 404"), __("Page not found") . " : " . __("Sorry, the page you requested is not on this server. Please contact us if you have questions or concerns"));
+                header("location: " . LINK . "Error/_404");
                 exit;
             }
         } else {
@@ -267,6 +291,8 @@ $i = 10;
 
 
 (ENVIRONEMENT) ? $_DEBUG->save("Layout loaded") : "";
+    
+    
 
 if ((ENVIRONEMENT) && (!IS_CLI) && (!IS_AJAX)) {//ENVIRONEMENT
     $execution_time = microtime(true) - TIME_START;
@@ -331,6 +357,16 @@ if ((ENVIRONEMENT) && (!IS_CLI) && (!IS_AJAX)) {//ENVIRONEMENT
         if ($display) {
             echo 'Constante: <b>' . $constante . '</b> Valeur: ' . $valeur . '<br/>';
         }
+    }
+} catch (Exception $e) {
+    echo $e->getMessage(), "\n";
+}
+finally {
+    if (!IS_CLI) {
+        
+          //$stat = new Statistics;
+          //$stat->getData($GLOBALS['_SITE']['IdUser']);
+          //$stat->callDeamon(); 
     }
 }
 
