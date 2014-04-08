@@ -116,19 +116,10 @@ if (empty($_SESSION['language'])) {
 }
 
 
-    
-    //debug($lg);
-    
-    
-    if (!in_array($_SESSION['language'], $lg)) {
-        //die("language error !");
-        $_SESSION['URL_404'] = $_SERVER['QUERY_STRING'];
-        header("location: " . WWW_ROOT . "en/error/_404/");
-        exit;
-    }
+$lg = explode(",",LANGUAGE_AVAILABLE);
+
 
 if (!in_array($_SESSION['language'], $lg)) {
-    //die("language error !");
     $_SESSION['URL_404'] = $_SERVER['QUERY_STRING'];
     header("location: " . WWW_ROOT . "en/error/_404/");
 }
@@ -164,23 +155,23 @@ if (IS_CLI) {
 } else {  //mode with apache
     define('LINK', WWW_ROOT . I18n::Get() . "/");
 
-        /*$auth = new Auth();
-        $auth->setInstance($_DB['default'], "user_main", array("login", "password"));
+    /* $auth = new Auth();
+      $auth->setInstance($_DB['default'], "user_main", array("login", "password"));
 
-    $auth = new Auth();
-    $auth->setInstance($_DB['default'], "user_main", array("login", "password"));
+      $auth = new Auth();
+      $auth->setInstance($_DB['default'], "user_main", array("login", "password"));
 
-    $auth->setFctToHashCookie(function ($password) {
-        return password_hash($password . $_SERVER['HTTP_USER_AGENT'] . $_SERVER['REMOTE_ADDR'], PASSWORD_DEFAULT);
-    });
+      $auth->setFctToHashCookie(function ($password) {
+      return password_hash($password . $_SERVER['HTTP_USER_AGENT'] . $_SERVER['REMOTE_ADDR'], PASSWORD_DEFAULT);
+      });
 
-    if (!$auth->authenticate("xdrfgwdfg", "xfgxfg")) {
-        echo "pas logger";
-    }
-        if (!$auth->authenticate("xdrfgwdfg", "xfgxfg")) {
-            echo "pas logger";
-        }
-         */
+      if (!$auth->authenticate("xdrfgwdfg", "xfgxfg")) {
+      echo "pas logger";
+      }
+      if (!$auth->authenticate("xdrfgwdfg", "xfgxfg")) {
+      echo "pas logger";
+      }
+     */
 
 
     // remplacer par le code en dessous
@@ -255,26 +246,26 @@ if (IS_CLI) {
 
 
 
-                    
-                    
-                    header("location: " . LINK . $url);
-                    exit;
-                }
-            } else {
-                
-                
-                
-                set_flash("error", __("Error 404"), __("Page not found") . " : " . __("Sorry, the page you requested is not on this server. Please contact us if you have questions or concerns"));
-                header("location: " . LINK . "Error/_404");
+
+
+                header("location: " . LINK . $url);
                 exit;
             }
         } else {
+
+
+
             set_flash("error", __("Error 404"), __("Page not found") . " : " . __("Sorry, the page you requested is not on this server. Please contact us if you have questions or concerns"));
             header("location: " . LINK . "Error/_404");
             exit;
         }
+    } else {
+        set_flash("error", __("Error 404"), __("Page not found") . " : " . __("Sorry, the page you requested is not on this server. Please contact us if you have questions or concerns"));
+        header("location: " . LINK . "Error/_404");
+        exit;
     }
 }
+
 
 
 (ENVIRONEMENT) ? $_DEBUG->save("ACL loaded") : "";
@@ -291,8 +282,8 @@ $i = 10;
 
 
 (ENVIRONEMENT) ? $_DEBUG->save("Layout loaded") : "";
-    
-    
+
+
 
 if ((ENVIRONEMENT) && (!IS_CLI) && (!IS_AJAX)) {//ENVIRONEMENT
     $execution_time = microtime(true) - TIME_START;
@@ -358,15 +349,5 @@ if ((ENVIRONEMENT) && (!IS_CLI) && (!IS_AJAX)) {//ENVIRONEMENT
             echo 'Constante: <b>' . $constante . '</b> Valeur: ' . $valeur . '<br/>';
         }
     }
-} catch (Exception $e) {
-    echo $e->getMessage(), "\n";
 }
-finally {
-    if (!IS_CLI) {
-        
-          //$stat = new Statistics;
-          //$stat->getData($GLOBALS['_SITE']['IdUser']);
-          //$stat->callDeamon(); 
-    }
-}
-
+    
