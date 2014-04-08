@@ -1,0 +1,10 @@
+#!/usr/bin/php
+<?php
+
+$argv = $_SERVER["argv"];
+unset($argv[0]);
+$arg_string = implode(' ',$argv);
+$cmd = "php application/webroot/index.php " . $arg_string;
+
+echo $cmd . "\n";
+echo system($cmd);
