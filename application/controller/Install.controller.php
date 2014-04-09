@@ -129,8 +129,7 @@ class Install extends Controller
                 }
             }
 
-            echo PHP_EOL . "To resume the setup : " . Color::getColoredString("php composer.phar update", "cyan") . PHP_EOL;
-            exit;
+            $this->onError();
         } else {
             echo $this->out("Check dependencies ", "OK");
         }
@@ -164,7 +163,7 @@ class Install extends Controller
 
         shell_exec("cd " . $_SERVER['PWD'] . "/application/webroot/js && wget -q http://code.jquery.com/jquery-latest.min.js");
 
-        $jQuery = $_SERVER['PWD'] . "/application/webroot/js/jquery-latest.min.js";
+        $jQuery = $_SERVER['PWD'] . "/application/webroot/js/jquery-latest.min.js ";
 
         if (file_exists($jQuery)) {
             $data = file_get_contents($jQuery);
@@ -176,13 +175,27 @@ class Install extends Controller
             echo $this->out("Making tree directory ", "KO");
         }
 
-
         shell_exec("chown www-data:www-data -R *");
         echo $this->out("Setting right to www-data:www-data ", "OK");
 
+        $code_retour = "";
 
-        system("./glial administration admin_index_unique");
-        echo $this->out("generating DDL cash for index ", "OK");
+
+        passthru("php glial administration admin_index_unique", $code_retour);
+
+
+        if ($code_retour !== 0) {
+            $fine = false;
+        } else {
+            $fine = true;
+        }
+
+
+        //echo $hh;
+        echo $this->out("Generating DDL cash for index ", $fine);
+
+        //     echo $hh;
+
 
         system("./glial administration admin_table");
         echo $this->out("generate DDL cash file for databases ", "OK");
@@ -190,22 +203,24 @@ class Install extends Controller
         system("./glial administration generate_model");
         echo $this->out("Making model with reverse engineering of databases ", "OK");
 
-        shell_exec("find " . $_SERVER['PWD'] . " -type f -exec chmod 740 {} \;;");
-        echo $this->out("Setting chmod 440 to all files", "OK");
 
-        shell_exec("find " . $_SERVER['PWD'] . " -type d -exec chmod 750 {} \;;");
-        echo $this->out("Setting chmod 550 to all files", "OK");
+        /*
+          shell_exec("find " . $_SERVER['PWD'] . " -type f -exec chmod 740 {} \;;");
+          echo $this->out("Setting chmod 440 to all files", "OK");
+
+          shell_exec("find " . $_SERVER['PWD'] . " -type d -exec chmod 750 {} \;;");
+          echo $this->out("Setting chmod 550 to all files", "OK");
 
 
-        shell_exec("find " . $_SERVER['PWD'] . "/tmp -type f -exec chmod 760 {} \;;");
-        echo $this->out("Setting chmod 660 to all files of /tmp", "OK");
+          shell_exec("find " . $_SERVER['PWD'] . "/tmp -type f -exec chmod 770 {} \;;");
+          echo $this->out("Setting chmod 660 to all files of /tmp", "OK");
 
-        shell_exec("find " . $_SERVER['PWD'] . "/tmp -type d -exec chmod 770 {} \;;");
-        echo $this->out("Setting chmod 660 to all directory of /tmp", "OK");
+          shell_exec("find " . $_SERVER['PWD'] . "/tmp -type d -exec chmod 770 {} \;;");
+          echo $this->out("Setting chmod 660 to all directory of /tmp", "OK");
 
-        shell_exec("chmod +x glial");
-        echo $this->out("Setting chmod +x to executable 'glial'", "OK");
-
+          shell_exec("chmod +x glial");
+          echo $this->out("Setting chmod +x to executable 'glial'", "OK");
+         */
 
         echo PHP_EOL;
     }
@@ -213,16 +228,41 @@ class Install extends Controller
     public function out($msg, $type)
     {
         switch ($type) {
-            case 'OK': $status = Color::getColoredString("OK", "green");
+            case 'OK':
+            case true: $status = Color::getColoredString("OK", "green");
                 break;
-            case 'KO': $status = Color::getColoredString("KO", "red");
+
+            case 'KO':
+            case false:
+                $status = Color::getColoredString("KO", "red");
+                $msg = Color::getColoredString($msg, "red");
+                $err = true;
                 break;
             case 'NA': $status = Color::getColoredString("!!", "blue");
                 break;
         }
 
+
+
         $ret = $msg . str_repeat(".", 76 - strlen(Color::strip($msg))) . " [" . $status . "]" . PHP_EOL;
+
+
+        if (!empty($err)) {
+            echo $ret;
+            $this->onError();
+        }
+
+
+
         return $ret;
+    }
+
+    public function onError()
+    {
+
+        echo PHP_EOL . "To understand what happen : " . Color::getColoredString("glial/tmp/log/error_php.log", "cyan") . PHP_EOL;
+        echo "To resume the setup : " . Color::getColoredString("php composer.phar update", "cyan") . PHP_EOL;
+        exit(10);
     }
 
 }

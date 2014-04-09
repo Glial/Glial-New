@@ -70,7 +70,6 @@ class Administration extends Controller
 
         $listTable = $this->db['default']->getListTable();
 
-
         $list_index = array();
         foreach ($listTable['table'] as $table_name) {
             $list_index[$table_name] = $this->db['default']->getIndexUnique($table_name);
@@ -79,11 +78,14 @@ class Administration extends Controller
         $json = json_encode($list_index);
 
 
-        if (is_writable(TMP . "keys/")) {
+        if (!is_writable(TMP . "keys/")) {
             file_put_contents(TMP . "keys/default_index_unique.txt", $json);
         } else {
-            trigger_error(__("This directory should be writable : ") . TMP . "keys/", E_USER_ERROR);
+            throw new \Exception("GLI-016 : This directory should be writable : " . TMP . "keys/",16);
         }
+        
+       //exit(95);
+        
     }
 
     function all()
@@ -126,7 +128,7 @@ class Administration extends Controller
                 if (!file_exists($file)) {
                     $fp = fopen($file, "w");
 
-                    echo "FILE : " . $file . "\n";
+                    echo "model : " . $file . "\n";
 
                     $text = "<?php\n\nnamespace Application\Model\\" . $model_name . ";\n";
                     $text .= "use \Glial\Synapse\Model;\n";
@@ -190,8 +192,6 @@ class Administration extends Controller
                     fclose($fp);
 
                     unset($data);
-                } else {
-                    echo "FILE : " . $file . " already exist\n";
                 }
             }
         }

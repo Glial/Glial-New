@@ -7,7 +7,7 @@
  *
  * PHP versions 5.5 required
  *
- * GLIAL(tm) : Rapid Development Framework (http://glial.com)
+ * GLIAL : Rapid Development Framework (http://glial.com)
  * Copyright 2007-2013, Esysteme Software Foundation, Inc. (http://www.esysteme.com/)
  *
  * Licensed under The MIT License
@@ -20,6 +20,16 @@
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 try {
+
+
+    function exception_error_handler($errno, $errstr, $errfile, $errline)
+    {
+
+            throw new Exception("GLI-100 : [ERROR SYSTEM:" . $errno . "] " . $errstr . " (" . $errfile . ":" . $errline.")", 100);
+        
+    }
+
+    set_error_handler("exception_error_handler");
 
     define("TIME_START", microtime(true));
 
@@ -73,16 +83,25 @@ try {
     define('VIDEO', WWW_ROOT . "video" . DS);
     define('JS', WWW_ROOT . "js" . DS);
 
+
     if (isset($_GET['url']) && $_GET['url'] === 'favicon.ico') {
         //case where navigator ask favicon.ico even if it's not set in your html
         exit;
     } else {
+
+
+
         if (!include(APP_DIR . DS . 'boot.php')) {
             trigger_error("Gliale core could not be found. Check the value of CORE_PATH in application/webroot/index.php.  It should point to the directory containing your " . DS . "glial core directory and your " . DS . "vendors root directory.", E_USER_ERROR);
         }
     }
 } catch (Exception $e) {
+
+
     echo $e->getMessage(), "\n";
+
+
+    //debug($e);
 }
 finally {
     if (!IS_CLI) {
@@ -90,5 +109,11 @@ finally {
           $stat = new Statistics;
           $stat->getData($GLOBALS['_SITE']['IdUser']);
           $stat->callDeamon(); */
+    }
+
+
+
+    if (!empty($e)) {
+        exit($e->getCode());
     }
 }

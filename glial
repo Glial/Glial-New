@@ -6,5 +6,8 @@ unset($argv[0]);
 $arg_string = implode(' ',$argv);
 $cmd = "php application/webroot/index.php " . $arg_string;
 
-echo $cmd . "\n";
-echo system($cmd);
+
+//echo "############ calling : ". $cmd . "\n";
+
+passthru($cmd, $code_retour);
+exit($code_retour);
