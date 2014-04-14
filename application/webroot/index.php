@@ -21,16 +21,16 @@
  */
 try {
 
-
+    /*
     function exception_error_handler($errno, $errstr, $errfile, $errline)
     {
-
-            throw new Exception("GLI-100 : [ERROR SYSTEM:" . $errno . "] " . $errstr . " (" . $errfile . ":" . $errline.")", 100);
-        
+        throw new Exception("GLI-100 : [ERROR SYSTEM:" . $errno . "] " . $errstr . " (" . $errfile . ":" . $errline . ")", 100);
     }
 
     set_error_handler("exception_error_handler");
-
+*/
+    
+    
     define("TIME_START", microtime(true));
 
 //to know if we are in cli
@@ -92,6 +92,9 @@ try {
 
 
         if (!include(APP_DIR . DS . 'boot.php')) {
+            
+            
+            
             trigger_error("Gliale core could not be found. Check the value of CORE_PATH in application/webroot/index.php.  It should point to the directory containing your " . DS . "glial core directory and your " . DS . "vendors root directory.", E_USER_ERROR);
         }
     }

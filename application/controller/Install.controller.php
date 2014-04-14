@@ -11,7 +11,7 @@ class Install extends Controller
     {
         $this->view = false;
 
-        //for display like putty in utf8
+//for display like putty in utf8
         shell_exec('echo -ne \'\\\\e%G\\\\e[?47h\\\\e%G\\\\e[?47l\\\'');
 
         echo PHP_EOL . Glial::header() . PHP_EOL;
@@ -124,7 +124,7 @@ class Install extends Controller
                         break;
                 }
                 if ($displayIniMessage) {
-                    //$text .= $iniMessage;
+//$text .= $iniMessage;
                     echo Color::getColoredString($text, "yellow") . PHP_EOL;
                 }
             }
@@ -135,73 +135,77 @@ class Install extends Controller
         }
 
 
-        //making tree directory
-        $dirs = array("data", "data/img", "documentation", "tmp/crop", "tmp/documentation", "application/webroot/js",
-            "application/webroot/css", "application/webroot/file", "application/webroot/video", "application/webroot/image");
+//making tree directory
 
-        $error = array();
-        foreach ($dirs as $dir) {
+        $fct = function($msg) {
+            $dirs = array("data", "data/img", "documentation", "tmp/crop", "tmp/documentation", "application/webroot/js",
+                "application/webroot/css", "application/webroot/file", "application/webroot/video", "application/webroot/image");
 
-            $dir = $_SERVER['PWD'] . "/" . $dir;
+            $error = array();
+            foreach ($dirs as $dir) {
 
-            if (!file_exists($dir)) {
-                if (!mkdir($dir)) {
-                    $errors[$dir] = true;
+                $dir = $_SERVER['PWD'] . "/" . $dir;
+
+                if (!file_exists($dir)) {
+                    if (!mkdir($dir)) {
+                        //echo $this->out("Impossible to create this directory : " . $key . " ", "KO");
+                    }
                 }
             }
-        }
 
-        if (!empty($errors)) {
-            foreach ($errors as $key => $val) {
-                echo $this->out("Impossible to create this directory : " . $key . " ", "KO");
+            return array(true, $msg);
+        };
+        $this->anonymous($fct, "Making tree directory");
+
+
+
+
+        $fct = function ($msg) {
+            
+
+            $name = "jquery-latest.min.js";
+            $jQuery = $_SERVER['PWD'] . "/application/webroot/js/".$name;
+            
+            $old_version ="";
+            if (file_exists($jQuery)) {
+                $data = file_get_contents($jQuery);
+                preg_match("/v[\d]+\.[\d]+\.[\d]+/", $data, $version);
+
+                $old_version  = $version[0] ." => ";
+                $this->cmd("rm ".$jQuery, "Delete old jQuery");
             }
-            exit;
-        }
+            
+            $this->cmd("cd " . $_SERVER['PWD'] . "/application/webroot/js && wget -q http://code.jquery.com/".$name, "Download lastest jQuery");
 
-        echo $this->out("Making tree directory ", "OK");
+            if (file_exists($jQuery)) {
+                $data = file_get_contents($jQuery);
 
+                preg_match("/v[\d]+\.[\d]+\.[\d]+/", $data, $version);
 
-        shell_exec("cd " . $_SERVER['PWD'] . "/application/webroot/js && wget -q http://code.jquery.com/jquery-latest.min.js");
+                $msg =  sprintf($msg, $old_version.Color::getColoredString($version[0],"green"));
 
-        $jQuery = $_SERVER['PWD'] . "/application/webroot/js/jquery-latest.min.js ";
-
-        if (file_exists($jQuery)) {
-            $data = file_get_contents($jQuery);
-
-            preg_match("/v[\d]+\.[\d]+\.[\d]+/", $data, $version);
-
-            echo $this->out("jQuery installed (" . Color::getColoredString($version[0], "green") . ")", "OK");
-        } else {
-            echo $this->out("Making tree directory ", "KO");
-        }
-
-        shell_exec("chown www-data:www-data -R *");
-        echo $this->out("Setting right to www-data:www-data ", "OK");
-
-        $code_retour = "";
+                return array(true, $msg);
+            } else {
+                $msg = sprintf($msg, "NOT INSTALLED");
+                return array(false, $msg);
+            }
+            
+            
+        };
 
 
-        passthru("php glial administration admin_index_unique", $code_retour);
+        $this->anonymous($fct, "jQuery installed (%s)");
 
 
-        if ($code_retour !== 0) {
-            $fine = false;
-        } else {
-            $fine = true;
-        }
+        $this->cmd("chown www-data:www-data -R *", "Setting right to www-data:www-data");
 
 
-        //echo $hh;
-        echo $this->out("Generating DDL cash for index ", $fine);
+        $this->cmd("php glial administration admin_index_unique", "Generating DDL cash for index");
+        $this->cmd("php glial administration admin_table", "Generating DDL cash for databases");
+        $this->cmd("php glial administration generate_model", "Making model with reverse engineering of databases");
 
-        //     echo $hh;
 
 
-        system("./glial administration admin_table");
-        echo $this->out("generate DDL cash file for databases ", "OK");
-
-        system("./glial administration generate_model");
-        echo $this->out("Making model with reverse engineering of databases ", "OK");
 
 
         /*
@@ -221,6 +225,8 @@ class Install extends Controller
           shell_exec("chmod +x glial");
           echo $this->out("Setting chmod +x to executable 'glial'", "OK");
          */
+
+        $this->cmd("chmod +x glial", "Setting chmod +x to executable 'glial'");
 
         echo PHP_EOL;
     }
@@ -243,16 +249,14 @@ class Install extends Controller
         }
 
 
-
-        $ret = $msg . str_repeat(".", 76 - strlen(Color::strip($msg))) . " [" . $status . "]" . PHP_EOL;
+        $msg .= " ";
+        $ret = $msg . str_repeat(".", 76 - strlen(Color::strip($msg))) . " [ " . $status . " ]" . PHP_EOL;
 
 
         if (!empty($err)) {
             echo $ret;
             $this->onError();
         }
-
-
 
         return $ret;
     }
@@ -263,6 +267,28 @@ class Install extends Controller
         echo PHP_EOL . "To understand what happen : " . Color::getColoredString("glial/tmp/log/error_php.log", "cyan") . PHP_EOL;
         echo "To resume the setup : " . Color::getColoredString("php composer.phar update", "cyan") . PHP_EOL;
         exit(10);
+    }
+
+    public function cmd($cmd, $msg)
+    {
+        $code_retour = 0;
+
+        passthru($cmd, $code_retour);
+
+        if ($code_retour !== 0) {
+            $fine = false;
+        } else {
+            $fine = true;
+        }
+
+        echo $this->out($msg, $fine . " ");
+    }
+
+    public function anonymous($function, $msg)
+    {
+        list($fine, $message) = $function($msg);
+
+        echo $this->out($message, $fine);
     }
 
 }

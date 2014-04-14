@@ -78,7 +78,7 @@ class Administration extends Controller
         $json = json_encode($list_index);
 
 
-        if (!is_writable(TMP . "keys/")) {
+        if (is_writable(TMP . "keys/")) {
             file_put_contents(TMP . "keys/default_index_unique.txt", $json);
         } else {
             throw new \Exception("GLI-016 : This directory should be writable : " . TMP . "keys/",16);
