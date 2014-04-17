@@ -18,7 +18,7 @@
         "monolog/monolog": "1.8.*"
     },
     "require-dev": {
-        "phpunit/phpunit": "3.7.*",
+        "phpunit/phpunit": "*",
         "fabpot/php-cs-fixer": "*"
     },
     "scripts": {
