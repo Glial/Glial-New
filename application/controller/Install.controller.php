@@ -161,36 +161,34 @@ class Install extends Controller
 
 
         $fct = function ($msg) {
-            
+
 
             $name = "jquery-latest.min.js";
-            $jQuery = $_SERVER['PWD'] . "/application/webroot/js/".$name;
-            
-            $old_version ="";
+            $jQuery = $_SERVER['PWD'] . "/application/webroot/js/" . $name;
+
+            $old_version = "";
             if (file_exists($jQuery)) {
                 $data = file_get_contents($jQuery);
                 preg_match("/v[\d]+\.[\d]+\.[\d]+/", $data, $version);
 
-                $old_version  = $version[0] ." => ";
-                $this->cmd("rm ".$jQuery, "Delete old jQuery");
+                $old_version = $version[0] . " => ";
+                $this->cmd("rm " . $jQuery, "Delete old jQuery");
             }
-            
-            $this->cmd("cd " . $_SERVER['PWD'] . "/application/webroot/js && wget -q http://code.jquery.com/".$name, "Download lastest jQuery");
+
+            $this->cmd("cd " . $_SERVER['PWD'] . "/application/webroot/js && wget -q http://code.jquery.com/" . $name, "Download lastest jQuery");
 
             if (file_exists($jQuery)) {
                 $data = file_get_contents($jQuery);
 
                 preg_match("/v[\d]+\.[\d]+\.[\d]+/", $data, $version);
 
-                $msg =  sprintf($msg, $old_version.Color::getColoredString($version[0],"green"));
+                $msg = sprintf($msg, $old_version . Color::getColoredString($version[0], "green"));
 
                 return array(true, $msg);
             } else {
                 $msg = sprintf($msg, "NOT INSTALLED");
                 return array(false, $msg);
             }
-            
-            
         };
 
 
@@ -203,9 +201,6 @@ class Install extends Controller
         $this->cmd("php glial administration admin_index_unique", "Generating DDL cash for index");
         $this->cmd("php glial administration admin_table", "Generating DDL cash for databases");
         $this->cmd("php glial administration generate_model", "Making model with reverse engineering of databases");
-
-
-
 
 
         /*
@@ -226,7 +221,40 @@ class Install extends Controller
           echo $this->out("Setting chmod +x to executable 'glial'", "OK");
          */
 
+
+        $fct = function ($msg) {
+            $file = $_SERVER['PWD'] . "/glial";
+            $data = file_get_contents($file);
+
+            $new_data = str_replace("php application", "php " . $_SERVER['PWD'] . "/application", $data);
+            if (!file_put_contents($file, $new_data)) {
+                return array(false, $msg);
+            }
+            return array(true, $msg);
+        };
+
+        $this->anonymous($fct, "Replace relative path by full path in Glial exec");
+
+        $fct = function ($msg) {
+
+            $file = $_SERVER['PWD'] . "/glial";
+            $path_to_php = exec("which php",$res ,$code);
+
+            if ($code !== 0) {
+                return array(false, $msg." $code:$path_to_php: can't find php");
+            }
+
+            $data = file($file);
+            $data[0] = "#!".$path_to_php.PHP_EOL;
+            file_put_contents($file, implode("",$data));
+
+            return array(true, $msg);
+        };
+
+        $this->anonymous($fct, "get full path of php");
+
         $this->cmd("chmod +x glial", "Setting chmod +x to executable 'glial'");
+        $this->cmd("cp -a glial /usr/local/bin/glial", "Copy glial to /usr/local/bin/");
 
         echo PHP_EOL;
     }
@@ -273,12 +301,16 @@ class Install extends Controller
     {
         $code_retour = 0;
 
+
+        ob_start();
         passthru($cmd, $code_retour);
 
         if ($code_retour !== 0) {
             $fine = false;
+            ob_end_flush();
         } else {
             $fine = true;
+            ob_end_clean();
         }
 
         echo $this->out($msg, $fine . " ");
