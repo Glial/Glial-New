@@ -40,15 +40,15 @@ class Administration extends Controller
                 }
 
                 $sql = "SHOW TABLES";
-                $res = $this->db['default']->sql_query($sql);
-                while ($table = $this->db['default']->sql_fetch_array($res)) {
+                $res = $this->di['db']->sql('default')->sql_query($sql);
+                while ($table = $this->di['db']->sql('default')->sql_fetch_array($res)) {
                     echo $table[0] . "\n";
 
 
                     $fp = fopen(TMP . "/database/" . $table[0] . ".table.txt", "w");
                     $sql = "DESCRIBE `" . $table[0] . "`";
-                    $res2 = $this->db['default']->sql_query($sql);
-                    while ($ob = $this->db['default']->sql_fetch_object($res2)) {
+                    $res2 = $this->di['db']->sql('default')->sql_query($sql);
+                    while ($ob = $this->di['db']->sql('default')->sql_fetch_object($res2)) {
                         $data['field'][] = $ob->Field;
                     }
 
@@ -68,11 +68,11 @@ class Administration extends Controller
         $this->layout_name = false;
         $this->view = false;
 
-        $listTable = $this->db['default']->getListTable();
+        $listTable = $this->di['db']->sql('default')->getListTable();
 
         $list_index = array();
         foreach ($listTable['table'] as $table_name) {
-            $list_index[$table_name] = $this->db['default']->getIndexUnique($table_name);
+            $list_index[$table_name] = $this->di['db']->sql('default')->getIndexUnique($table_name);
         }
 
         $json = json_encode($list_index);

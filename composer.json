@@ -22,6 +22,6 @@
         "fabpot/php-cs-fixer": "*"
     },
     "scripts": {
-        "post-update-cmd": "php glial install index"
+        "post-update-cmd": "php glial install composer"
     }
 }

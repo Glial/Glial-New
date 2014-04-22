@@ -33,11 +33,11 @@ use \Glial\Debug\Debug;
 use \Glial\Synapse\Singleton;
 use \Glial\Synapse\Statistics;
 use \Glial\Synapse\FactoryController;
-use \Glial\Sgbd\Sql\FactorySql;
 use \Glial\Tools\ArrayTools;
 use \Glial\I18n\I18n;
 use \Glial\Acl\Acl;
 use \Glial\Auth\Auth;
+use \Glial\Sgbd\Sgbd;
 
 require ROOT . DS . 'vendor/autoload.php';
 
@@ -47,6 +47,7 @@ session_start();
 $config = new Config;
 $config->load(CONFIG);
 
+FactoryController::addDi("config",$config);
 
 if (ENVIRONEMENT) {
     $_DEBUG = new Debug;
@@ -70,20 +71,15 @@ spl_autoload_register(function($className) {
 $_POST = ArrayTools::array_map_recursive("htmlentities", $_POST);
 
 
-
-
-//include LIB . 'sql' . DS . 'pdo_sqlsrv' . '.lib.php';
-//$paths = array(LIBRARY, '.');
-//set_include_path(implode(PATH_SEPARATOR, $paths));
-
-
 require __DIR__ . "/basic.php";
 
 
 (ENVIRONEMENT) ? $_DEBUG->save("Loading class") : "";
 
 $db = $config->get("db");
-$_DB = FactorySql::init($db);
+$_DB = new Sgbd($db);
+
+FactoryController::addDi("db",$_DB);
 
 (ENVIRONEMENT) ? $_DEBUG->save("Connect to database") : "";
 
@@ -107,7 +103,7 @@ if (!IS_CLI) {
 
 
 
-I18n::injectDb($_DB['default']);
+I18n::injectDb($_DB->sql("default"));
 I18n::SetDefault("en");
 I18n::SetSavePath(TMP . "translations");
 
@@ -149,10 +145,9 @@ if (IS_CLI) {
         cli_set_process_title("glial-".$_SYSTEM['controller']."-".$_SYSTEM['action']);
         
     } else {
-        echo "Number of param incorect\n";
-        echo "Usage :\n";
-        echo "php index.php controlleur action [params]\n";
-        exit;
+        
+        throw new InvalidArgumentException('usage : gial <controlleur> <action> [params]');
+
     }
 } else {  //mode with apache
     define('LINK', WWW_ROOT . I18n::Get() . "/");
@@ -225,7 +220,9 @@ if (IS_CLI) {
 
 
     $acl = new Acl(CONFIG . "acl.config.ini");
-
+    
+    FactoryController::addDi("acl",$acl);
+    
 
     if (!$acl->isAllowed($GLOBALS['_SITE']['id_group'], $_SYSTEM['controller'] . "/" . $_SYSTEM['action'])) {
         if ($acl->checkIfResourceExist($_SYSTEM['controller'] . "/" . $_SYSTEM['action'])) {
@@ -240,14 +237,7 @@ if (IS_CLI) {
                     $msg = $_SYSTEM['controller'] . "/" . $_SYSTEM['action'] . "<br />" . __("Your rank to this website is not enough to acess to this page");
                 }
 
-
                 set_flash("error", __("Acess denied"), __("Acess denied") . " : " . $msg);
-
-
-
-
-
-
                 header("location: " . LINK . $url);
                 exit;
             }

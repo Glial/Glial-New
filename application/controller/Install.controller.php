@@ -3,16 +3,26 @@
 use \Glial\Synapse\Controller;
 use \Glial\Cli\Glial;
 use \Glial\Cli\Color;
+use \Glial\Cli\Shell;
+use \Glial\Acl\Acl;
 
 class Install extends Controller
 {
+
+    function composer()
+    {
+        $this->view = false;
+        echo PHP_EOL . Glial::header() . PHP_EOL;
+
+        echo "To finish install run : '" . Color::getColoredString("php glial install", "purple") . "'" . PHP_EOL;
+    }
 
     function index()
     {
         $this->view = false;
 
 //for display like putty in utf8
-        shell_exec('echo -ne \'\\\\e%G\\\\e[?47h\\\\e%G\\\\e[?47l\\\'');
+        //shell_exec('echo -ne \'\\\\e%G\\\\e[?47h\\\\e%G\\\\e[?47l\\\'');
 
         echo PHP_EOL . Glial::header() . PHP_EOL;
 
@@ -148,7 +158,7 @@ class Install extends Controller
 
                 if (!file_exists($dir)) {
                     if (!mkdir($dir)) {
-                        //echo $this->out("Impossible to create this directory : " . $key . " ", "KO");
+//echo $this->out("Impossible to create this directory : " . $key . " ", "KO");
                     }
                 }
             }
@@ -217,8 +227,6 @@ class Install extends Controller
           shell_exec("find " . $_SERVER['PWD'] . "/tmp -type d -exec chmod 770 {} \;;");
           echo $this->out("Setting chmod 660 to all directory of /tmp", "OK");
 
-          shell_exec("chmod +x glial");
-          echo $this->out("Setting chmod +x to executable 'glial'", "OK");
          */
 
 
@@ -238,15 +246,15 @@ class Install extends Controller
         $fct = function ($msg) {
 
             $file = $_SERVER['PWD'] . "/glial";
-            $path_to_php = exec("which php",$res ,$code);
+            $path_to_php = exec("which php", $res, $code);
 
             if ($code !== 0) {
-                return array(false, $msg." $code:$path_to_php: can't find php");
+                return array(false, $msg . " $code:$path_to_php: can't find php");
             }
 
             $data = file($file);
-            $data[0] = "#!".$path_to_php.PHP_EOL;
-            file_put_contents($file, implode("",$data));
+            $data[0] = "#!" . $path_to_php . PHP_EOL;
+            file_put_contents($file, implode("", $data));
 
             return array(true, $msg);
         };
@@ -256,7 +264,17 @@ class Install extends Controller
         $this->cmd("chmod +x glial", "Setting chmod +x to executable 'glial'");
         $this->cmd("cp -a glial /usr/local/bin/glial", "Copy glial to /usr/local/bin/");
 
-        echo PHP_EOL;
+
+        $acl = new Acl(CONFIG . "acl.config.ini");
+        echo $acl;
+        
+        
+        echo $this->di['db'];
+        
+        $this->di['db']->mainMenu();
+        
+
+        //$file = Shell::prompt2('Please choose your answer or press Enter to continue: ', array('', '1', '2', '3')); 
     }
 
     public function out($msg, $type)
@@ -321,6 +339,20 @@ class Install extends Controller
         list($fine, $message) = $function($msg);
 
         echo $this->out($message, $fine);
+    }
+
+    public function sgbd()
+    {
+        
+        parse_ini_file($filename);
+        
+        
+        $gg = function ($input) {
+            preg_match("/(y|n)/i", $input);
+        };
+
+
+        $return = Shell::prompt("TEst input [Y/n]", $gg);
     }
 
 }
