@@ -271,7 +271,7 @@ class Install extends Controller
         
         echo $this->di['db'];
         
-        $this->di['db']->mainMenu();
+        //$this->di['db']->mainMenu();
         
 
         //$file = Shell::prompt2('Please choose your answer or press Enter to continue: ', array('', '1', '2', '3')); 
