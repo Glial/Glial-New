@@ -2,6 +2,14 @@
 [![Dependency Status](https://www.versioneye.com/php/glial:new-project/dev-master/badge.png)](https://www.versioneye.com/php/glial:new-project/dev-master)
 
 
+
+You need :
+
+ * PHP 5.5
+ * Distribution based on Linux. (don't work with windows!)
+
+
+
 To install a new project working with Glial :
 
 
