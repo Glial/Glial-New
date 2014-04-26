@@ -4,6 +4,7 @@ use \Glial\Synapse\Controller;
 use \Glial\Cli\Glial;
 use \Glial\Cli\Color;
 use \Glial\Cli\Shell;
+use \Glial\Cli\Window;
 use \Glial\Acl\Acl;
 
 class Install extends Controller
@@ -355,4 +356,9 @@ class Install extends Controller
         $return = Shell::prompt("TEst input [Y/n]", $gg);
     }
 
+    function win()
+    {
+        $this->view = false;
+        $win = new Window('Test windows', "SFRHSFGH x xfhg xfgh xfgh xgfh gxfh xfxgfh x xfgh xfgh xfgh xfgh : failed to open stream: No such file or directory in ");
+    }
 }

@@ -30,8 +30,6 @@ ini_set('APACHE_LOG_DIR', TMP . 'log' . DS);
 
 use \Glial\Synapse\Config;
 use \Glial\Debug\Debug;
-use \Glial\Synapse\Singleton;
-use \Glial\Synapse\Statistics;
 use \Glial\Synapse\FactoryController;
 use \Glial\Tools\ArrayTools;
 use \Glial\I18n\I18n;
@@ -46,7 +44,6 @@ session_start();
 
 $config = new Config;
 $config->load(CONFIG);
-
 FactoryController::addDi("config",$config);
 
 if (ENVIRONEMENT) {
@@ -153,10 +150,10 @@ if (IS_CLI) {
     define('LINK', WWW_ROOT . I18n::Get() . "/");
 
     /* $auth = new Auth();
-      $auth->setInstance($_DB['default'], "user_main", array("login", "password"));
+      $auth->setInstance($_DB->sql("default"), "user_main", array("login", "password"));
 
       $auth = new Auth();
-      $auth->setInstance($_DB['default'], "user_main", array("login", "password"));
+      $auth->setInstance($_DB->sql("default"), "user_main", array("login", "password"));
 
       $auth->setFctToHashCookie(function ($password) {
       return password_hash($password . $_SERVER['HTTP_USER_AGENT'] . $_SERVER['REMOTE_ADDR'], PASSWORD_DEFAULT);
@@ -177,12 +174,12 @@ if (IS_CLI) {
     $GLOBALS['_SITE']['id_group'] = 1; //visitor
 
     if (!empty($_COOKIE['IdUser']) && !empty($_COOKIE['Passwd'])) {
-        $sql = "select * from user_main where id = '" . $_DB['default']->sql_real_escape_string($_COOKIE['IdUser']) . "'";
+        $sql = "select * from user_main where id = '" . $_DB->sql("default")->sql_real_escape_string($_COOKIE['IdUser']) . "'";
 
-        $res = $_DB['default']->sql_query($sql);
+        $res = $_DB->sql("default")->sql_query($sql);
 
-        if ($_DB['default']->sql_num_rows($res) === 1) {
-            $ob = $_DB['default']->sql_fetch_object($res);
+        if ($_DB->sql("default")->sql_num_rows($res) === 1) {
+            $ob = $_DB->sql("default")->sql_fetch_object($res);
 
             //empeche le volage de session
             if (sha1($ob->password . $_SERVER['HTTP_USER_AGENT'] . $_SERVER['REMOTE_ADDR']) === $_COOKIE['Passwd']) {
@@ -191,8 +188,8 @@ if (IS_CLI) {
                 $GLOBALS['_SITE']['FirstName'] = $ob->firstname;
                 $GLOBALS['_SITE']['id_group'] = $ob->id_group;
 
-                $sql = "UPDATE user_main SET date_last_connected = now() where id=" . $_DB['default']->sql_real_escape_string($_SITE['IdUser']);
-                $_DB['default']->sql_query($sql);
+                $sql = "UPDATE user_main SET date_last_connected = now() where id=" . $_DB->sql("default")->sql_real_escape_string($_SITE['IdUser']);
+                $_DB->sql("default")->sql_query($sql);
 
 
                 if ($ob->is_valid == 0) {
@@ -245,14 +242,14 @@ if (IS_CLI) {
 
 
 
-            set_flash("error", __("Error 404"), __("Page not found") . " : " . __("Sorry, the page you requested is not on this server. Please contact us if you have questions or concerns"));
-            header("location: " . LINK . "Error/_404");
-            exit;
+           // set_flash("error", __("Error 404"), __("Page not found") . " : " . __("Sorry, the page you requested is not on this server. Please contact us if you have questions or concerns"));
+           // header("location: " . LINK . "Error/_404");
+           // exit;
         }
     } else {
-        set_flash("error", __("Error 404"), __("Page not found") . " : " . __("Sorry, the page you requested is not on this server. Please contact us if you have questions or concerns"));
-        header("location: " . LINK . "Error/_404");
-        exit;
+       // set_flash("error", __("Error 404"), __("Page not found") . " : " . __("Sorry, the page you requested is not on this server. Please contact us if you have questions or concerns"));
+       // header("location: " . LINK . "Error/_404");
+       // exit;
     }
 }
 
@@ -282,18 +279,18 @@ if ((ENVIRONEMENT) && (!IS_CLI) && (!IS_AJAX)) {//ENVIRONEMENT
 
 
     echo "Temps d'exéution de la page : " . round($execution_time, 5) . " seconds";
-    echo "<br />Nombre de requette : " . $_DB['default']->get_count_query();
+    echo "<br />Nombre de requette : " . $_DB->sql("default")->get_count_query();
     $file_list = get_included_files();
     echo "<br />Nombre de fichier loaded : <b>" . count($file_list) . "</b><br />";
     debug($file_list);
 
-    if ($_DB['default']->get_count_query() != 0) {
+    if ($_DB->sql("default")->get_count_query() != 0) {
         echo "<table class=\"debug\">";
         echo "<tr><th>#</th><th>File</th><th>Line</th><th>Query</th><th>Rows</th><th>Last inserted id</th><th>Time</th></tr>";
         $i = 0;
         $j = 0;
         $k = 0;
-        foreach ($_DB['default']->query as $value) {
+        foreach ($_DB->sql("default")->query as $value) {
             echo "<tr><td>" . $k . "</td><td>" . $value['file'] . "</td><td>" . $value['line'] . "</td><td>" . $value['query'] . "</td><td>" . $value['rows'] . "</td><td>" . $value['last_id'] . "</td><td>" . $value['time'] . "</td></tr>";
             $i += $value['time'];
             $j += $value['rows'];

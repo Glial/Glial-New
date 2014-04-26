@@ -45,7 +45,7 @@ try {
      * When using custom settings be sure to use the DS and do not add a trailing DS.
      */
     if (IS_CLI) {
-        if (substr($_SERVER["SCRIPT_FILENAME"], 0, 1) === "/") {
+        if (substr($_SERVER["SCRIPT_FILENAME"], 0, 1) === DS) {
             //The actual directory name for the "app". 
             define('ROOT', dirname(dirname(dirname(htmlspecialchars($_SERVER["SCRIPT_FILENAME"], ENT_QUOTES, "utf-8")))));
             define('APP_DIR', dirname(dirname(htmlspecialchars($_SERVER["SCRIPT_FILENAME"], ENT_QUOTES, "utf-8"))));
