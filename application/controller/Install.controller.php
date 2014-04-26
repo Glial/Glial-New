@@ -158,7 +158,7 @@ class Install extends Controller
 
                 if (!file_exists($dir)) {
                     if (!mkdir($dir)) {
-//echo $this->out("Impossible to create this directory : " . $key . " ", "KO");
+                        echo $this->out("Impossible to create this directory : " . $key . " ", "KO");
                     }
                 }
             }
