@@ -5,12 +5,7 @@
 ;password => password who will be used to connect to the SGBD
 ;database => database / schema witch will be used to access to datas
 
-[mysql_write]
-driver=mysql
-hostname=localhost
-user=root
-password='zeb33tln'
-database=glial
+
 [default]
 driver=mysql
 hostname=localhost
