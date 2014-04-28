@@ -65,10 +65,6 @@ spl_autoload_register(function($className) {
     }
 });
 
-
-$_POST = ArrayTools::array_map_recursive("htmlentities", $_POST);
-
-
 require __DIR__ . "/basic.php";
 
 
@@ -120,7 +116,6 @@ if (!in_array($_SESSION['language'], $lg)) {
 
 I18n::load($_SESSION['language']);
 (ENVIRONEMENT) ? $_DEBUG->save("Language loaded") : "";
-
 
 
 //mode with php-cli
@@ -251,10 +246,6 @@ FactoryController::rootNode($_SYSTEM['controller'], $_SYSTEM['action'], $_SYSTEM
 
 
 $i = 10;
-
-
-
-
 
 (ENVIRONEMENT) ? $_DEBUG->save("Layout loaded") : "";
 

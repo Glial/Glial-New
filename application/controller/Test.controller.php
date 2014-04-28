@@ -36,7 +36,8 @@ function sig_handler($signo)
 
 class Test extends Controller
 {
-
+    use \Glial\Neuron\Controller\Test;
+    
     function index()
     {
         $this->view = false;
