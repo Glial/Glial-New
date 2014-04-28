@@ -37,6 +37,7 @@ use \Glial\Acl\Acl;
 use \Glial\Auth\Auth;
 use \Glial\Sgbd\Sgbd;
 
+
 require ROOT . DS . 'vendor/autoload.php';
 
 session_start();
@@ -44,7 +45,7 @@ session_start();
 
 $config = new Config;
 $config->load(CONFIG);
-FactoryController::addDi("config",$config);
+FactoryController::addDi("config", $config);
 
 if (ENVIRONEMENT) {
     $_DEBUG = new Debug;
@@ -76,9 +77,9 @@ require __DIR__ . "/basic.php";
 $db = $config->get("db");
 $_DB = new Sgbd($db);
 
-FactoryController::addDi("db",$_DB);
+FactoryController::addDi("db", $_DB);
 
-(ENVIRONEMENT) ? $_DEBUG->save("Connect to database") : "";
+(ENVIRONEMENT) ? $_DEBUG->save("Init database") : "";
 
 
 if (!IS_CLI) {
@@ -93,14 +94,14 @@ if (!IS_CLI) {
         //SetCookie("language", $_GET['lg'], time() + 60 * 60 * 24 * 365, "/", $_SERVER['SERVER_NAME'], false, true);
         //SetCookie("language", $_GET['lg'], time() + 60 * 60 * 24 * 365, "/");
     }
-}
 
+}
 
 (ENVIRONEMENT) ? $_DEBUG->save("Rooter loaded") : "";
 
 
 
-I18n::injectDb($_DB->sql("default"));
+I18n::injectDb($_DB);
 I18n::SetDefault("en");
 I18n::SetSavePath(TMP . "translations");
 
@@ -138,13 +139,11 @@ if (IS_CLI) {
 
             $_SYSTEM['param'] = $params;
         }
-        
-        cli_set_process_title("glial-".$_SYSTEM['controller']."-".$_SYSTEM['action']);
-        
-    } else {
-        
-        throw new InvalidArgumentException('usage : gial <controlleur> <action> [params]');
 
+        cli_set_process_title("glial-" . $_SYSTEM['controller'] . "-" . $_SYSTEM['action']);
+    } else {
+
+        throw new InvalidArgumentException('usage : gial <controlleur> <action> [params]');
     }
 } else {  //mode with apache
     define('LINK', WWW_ROOT . I18n::Get() . "/");
@@ -210,46 +209,35 @@ if (IS_CLI) {
 
     (ENVIRONEMENT) ? $_DEBUG->save("User connexion") : "";
 
-
     $_SYSTEM['controller'] = \Glial\Utility\Inflector::camelize($url['controller']);
     $_SYSTEM['action'] = $url['action'];
     $_SYSTEM['param'] = $url['param'];
 
-
     $acl = new Acl(CONFIG . "acl.config.ini");
-    
-    FactoryController::addDi("acl",$acl);
-    
+    FactoryController::addDi("acl", $acl);
 
-    if (!$acl->isAllowed($GLOBALS['_SITE']['id_group'], $_SYSTEM['controller'] . "/" . $_SYSTEM['action'])) {
-        if ($acl->checkIfResourceExist($_SYSTEM['controller'] . "/" . $_SYSTEM['action'])) {
-            if ($_SYSTEM['controller'] !== "" && $_SYSTEM['action'] !== "") {
-                if ($GLOBALS['_SITE']['id_group'] == 1) {
 
-                    $url = "user/register/";
-                    $msg = $_SYSTEM['controller'] . "/" . $_SYSTEM['action'] . "<br />" . __("You have to be registered to acces to this page");
-                } else {
-                    //die("here");
-                    $url = "home/index/";
-                    $msg = $_SYSTEM['controller'] . "/" . $_SYSTEM['action'] . "<br />" . __("Your rank to this website is not enough to acess to this page");
-                }
 
-                set_flash("error", __("Acess denied"), __("Acess denied") . " : " . $msg);
-                header("location: " . LINK . $url);
-                exit;
+    if ($acl->checkIfResourceExist($_SYSTEM['controller'] . "/" . $_SYSTEM['action'])) {
+        if (!$acl->isAllowed($GLOBALS['_SITE']['id_group'], $_SYSTEM['controller'] . "/" . $_SYSTEM['action'])) {
+            if ($GLOBALS['_SITE']['id_group'] == 1) {
+
+                $url = "user/register/";
+                $msg = $_SYSTEM['controller'] . "/" . $_SYSTEM['action'] . "<br />" . __("You have to be registered to acces to this page");
+            } else {
+                //die("here");
+                $url = "home/index/";
+                $msg = $_SYSTEM['controller'] . "/" . $_SYSTEM['action'] . "<br />" . __("Your rank to this website is not enough to acess to this page");
             }
-        } else {
-
-
-
-           // set_flash("error", __("Error 404"), __("Page not found") . " : " . __("Sorry, the page you requested is not on this server. Please contact us if you have questions or concerns"));
-           // header("location: " . LINK . "Error/_404");
-           // exit;
+            
+            set_flash("error", __("Acess denied"), __("Acess denied") . " : " . $msg);
+            header("location: " . LINK . $url);
+            exit;
         }
     } else {
-       // set_flash("error", __("Error 404"), __("Page not found") . " : " . __("Sorry, the page you requested is not on this server. Please contact us if you have questions or concerns"));
-       // header("location: " . LINK . "Error/_404");
-       // exit;
+        set_flash("error", __("Error 404"), __("Page not found") . " : " . __("Sorry, the page you requested : \"".$_SYSTEM['controller'] . "/" . $_SYSTEM['action']."\"is not on this server. Please contact us if you have questions or concerns"));
+        header("location: " . LINK . "Error/_404");
+        exit;
     }
 }
 

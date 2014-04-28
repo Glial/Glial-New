@@ -83,18 +83,14 @@ try {
     define('VIDEO', WWW_ROOT . "video" . DS);
     define('JS', WWW_ROOT . "js" . DS);
 
-
-    if (isset($_GET['url']) && $_GET['url'] === 'favicon.ico') {
+	
+	
+	
+    if (isset($_GET['path']) && strpos($_GET['path'],'favicon.ico')) {
         //case where navigator ask favicon.ico even if it's not set in your html
         exit;
     } else {
-
-
-
         if (!include(APP_DIR . DS . 'boot.php')) {
-            
-            
-            
             trigger_error("Gliale core could not be found. Check the value of CORE_PATH in application/webroot/index.php.  It should point to the directory containing your " . DS . "glial core directory and your " . DS . "vendors root directory.", E_USER_ERROR);
         }
     }

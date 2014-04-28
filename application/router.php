@@ -6,6 +6,9 @@ include_once(CONFIG . "router.config.php");
 
 if ( empty($_GET['path']) )
 {
+	
+	debug($_GET['path']);
+	
 	//$_GET['path'] = ROUTE_DEFAULT;
 
 	if ( empty($_SESSION['language']) )
@@ -30,8 +33,6 @@ if ( empty($_GET['path']) )
 		}
 	}
 
-
-	//echo WWW_ROOT.$_COOKIE['language']."/home/";die();
 	header("HTTP/1.1 301 Moved Permanently");
 	header("Status: 301 Moved Permanently", false, 301);
 	header("Location: " . WWW_ROOT . $_SESSION['language'] . "/home/");

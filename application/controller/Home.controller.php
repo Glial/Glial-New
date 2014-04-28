@@ -1,7 +1,6 @@
 <?php
 
 use \Glial\Synapse\Controller;
-use \Glial\Acl\Acl;
 
 class Home extends Controller
 {

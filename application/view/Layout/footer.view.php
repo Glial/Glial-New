@@ -1,8 +1,11 @@
 </div>
 
-<footer>
-
-
+<footer id ="footer">
+<?php
+echo __("Images and texts are the property of their respective authors.");
+echo " - ";
+echo __("Made in France");
+?>
 </footer>
 
 

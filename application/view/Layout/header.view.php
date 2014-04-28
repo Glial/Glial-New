@@ -23,7 +23,7 @@ echo "<link rel=\"stylesheet\" type=\"text/css\" href=\"" . CSS . "default.style
 
 <div id="all">
 <header>
-<div id="headline"></div>
+<div id="headline"><?= date("l d F Y - H:i:s") ?> CET</div>
 <div id="banner"></div>
 <menu></menu>
 </header>
