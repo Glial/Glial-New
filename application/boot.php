@@ -118,6 +118,11 @@ I18n::load($_SESSION['language']);
 (ENVIRONEMENT) ? $_DEBUG->save("Language loaded") : "";
 
 
+
+//could be only on apache
+$acl = new Acl(CONFIG . "acl.config.ini");
+FactoryController::addDi("acl", $acl);
+
 //mode with php-cli
 if (IS_CLI) {
     if ($_SERVER["argc"] >= 3) {
@@ -208,8 +213,7 @@ if (IS_CLI) {
     $_SYSTEM['action'] = $url['action'];
     $_SYSTEM['param'] = $url['param'];
 
-    $acl = new Acl(CONFIG . "acl.config.ini");
-    FactoryController::addDi("acl", $acl);
+
 
 
 
