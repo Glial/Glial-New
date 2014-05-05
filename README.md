@@ -24,7 +24,7 @@ install composer
 install a new project (install in current directory, will create a new dir)
 
 
-`$ composer create-project -sdev --dev --keep-vcs glial/new-project my_glial_project`
+`$ composer create-project --no-cache -sdev --dev --keep-vcs glial/new-project my_glial_project`
 
 
 update `configuration/db.config.ini.php`
