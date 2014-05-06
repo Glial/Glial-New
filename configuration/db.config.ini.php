@@ -12,3 +12,11 @@ hostname=localhost
 user=root
 password='zeb33tln'
 database=glial
+
+
+[default22]
+driver=postgresql
+hostname=localhost
+user=root
+password='zeb33tln'
+database=glial
