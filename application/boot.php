@@ -148,23 +148,21 @@ if (IS_CLI) {
 } else {  //mode with apache
     define('LINK', WWW_ROOT . I18n::Get() . "/");
 
-    /* $auth = new Auth();
-      $auth->setInstance($_DB->sql("default"), "user_main", array("login", "password"));
+    
+    
+    
+    /*
+    $auth->setInstance($_DB->sql("default"), "user_main", array("login", "password"));
 
-      $auth = new Auth();
-      $auth->setInstance($_DB->sql("default"), "user_main", array("login", "password"));
 
-      $auth->setFctToHashCookie(function ($password) {
-      return password_hash($password . $_SERVER['HTTP_USER_AGENT'] . $_SERVER['REMOTE_ADDR'], PASSWORD_DEFAULT);
-      });
+    $auth->setFctToHashPasswd(function ($password) {
+        return password_hash($password . $_SERVER['HTTP_USER_AGENT'] . $_SERVER['REMOTE_ADDR'], PASSWORD_DEFAULT);
+    });
 
-      if (!$auth->authenticate("xdrfgwdfg", "xfgxfg")) {
-      echo "pas logger";
-      }
-      if (!$auth->authenticate("xdrfgwdfg", "xfgxfg")) {
-      echo "pas logger";
-      }
-     */
+
+    if (!$auth->authenticate("xdrfgwdfg", "xfgxfg")) {
+        echo "pas logger";
+    }*/
 
 
     // remplacer par le code en dessous

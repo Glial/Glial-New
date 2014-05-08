@@ -5,8 +5,13 @@ use \Glial\Acl\Acl;
 use \Glial\Cli\Table;
 use \Glial\Cli\Color;
 use \Glial\Cli\Glial;
+use \Glial\Cli\Window;
 use \Glial\Sgbd\Sql\FactorySql;
 use \Glial\Synapse\Config;
+use Vatson\Callback\IsolatedCallback;
+use Glial\Cli\Ansi;
+use Glial\Cli\Ansi\Sprite;
+use Glial\Cli\Ansi\Point;
 
 function sig_handler($signo)
 {
@@ -36,8 +41,9 @@ function sig_handler($signo)
 
 class Test extends Controller
 {
+
     use \Glial\Neuron\Controller\Test;
-    
+
     function index()
     {
         $this->view = false;
@@ -191,9 +197,9 @@ class Test extends Controller
 
             foreach ($sql as $ob) {
 
-                
+
                 //exec
-                
+
                 $childId = $ob['id'];
 
                 $pid = pcntl_fork();
@@ -266,16 +272,16 @@ class Test extends Controller
         echo "Fin du files " . $data['id'] . PHP_EOL;
 
 
-        
 
-          $dd = array();
-          $dd['job_queue']['id'] = $data['id'];
-          $dd['job_queue']['date_end'] = date("c");
-          $db->sql_save($dd);
 
-          foreach ($dbs as $connect) {
-          $connect->sql_close();
-          } 
+        $dd = array();
+        $dd['job_queue']['id'] = $data['id'];
+        $dd['job_queue']['date_end'] = date("c");
+        $db->sql_save($dd);
+
+        foreach ($dbs as $connect) {
+            $connect->sql_close();
+        }
     }
 
     function sql_for_pcntl($sql)
@@ -283,6 +289,56 @@ class Test extends Controller
         $res = $this->db['default']->sql_query($sql);
         $ob = $this->db['default']->sql_to_array($res);
         return $ob;
+    }
+
+    function isolated()
+    {
+        $this->view = false;
+
+
+
+        $deb = microtime(true);
+        $cb = function() {
+            return array_slice(range(1, 100000), rand(1, 100), rand(1, 10));
+        };
+
+        $icb = new IsolatedCallback($cb);
+        $random_slice = $icb();
+        echo "time :" . round(microtime(true) - $deb, 4);
+    }
+
+    function win()
+    {
+        $this->view = false;
+        new Window("Title", " REquest the good value ?\n[[INPUT]]");
+    }
+
+    function win2()
+    {
+        $this->view = false;
+        $win = new Ansi();
+
+        $win->clear();
+
+        $sprite = new Sprite("AAAAAA\nBBBBBB\nCCCCCC");
+
+        //$win->printSprite($sprite, 20,20);
+
+        for ($i = 0; $i < 30; $i++) {
+            //$win->clear();
+            
+            
+            $win->Circle(new Point(40, 40), $i);
+            
+            //$win->triangle(new Point(40 + $i, 20), new Point(25 + $i, 60), new Point(10 + $i, 10));
+            $win->moveCursorTo(1,1);
+            usleep(200000);
+        }
+
+
+        //$win->segment ( new Point(20,60),new Point(10,60) );
+
+        $win->moveCursorTo(1, 1);
     }
 
 }
