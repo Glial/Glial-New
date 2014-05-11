@@ -53,12 +53,6 @@ function debug($var = false, $showHtml = false, $showFrom = true)
 }
 
 
-function from()
-{
-    $calledFrom = debug_backtrace();
-    $var = explode(DS, substr(str_replace(ROOT, '', $calledFrom[1]['file']), 1));
-    return( strtolower(end($var)));
-}
 
 function set_flash($type_error, $title, $msg)
 {
