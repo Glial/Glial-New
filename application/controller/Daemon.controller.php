@@ -4,7 +4,7 @@ use \Glial\Synapse\Controller;
 
 class Daemon extends Controller {
 
-    use \Glial\Neuron\Controller\Daemon;
+    //use \Glial\Neuron\Controller\Daemon;
 
     
     
