@@ -14,7 +14,7 @@
         "php": ">=5.5",
         "ext-gd": "*",
         "ext-mcrypt": "*",
-        "glial/glial": "dev-master"
+        "glial/glial": "*"
     },
     "require-dev": {
         "phpunit/phpunit": "*",
@@ -24,5 +24,4 @@
         "post-update-cmd": "php glial install composer",
         "post-install-cmd": "php glial install composer"
     },
-    "minimum-stability": "dev"
 }
