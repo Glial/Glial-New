@@ -7,14 +7,13 @@
  * default : true
  */
 
-if (!defined('ENVIRONEMENT')) {
-    define("ENVIRONEMENT", true);
+if (!defined('AUTH_SESSION_TIME')) {
+    define("AUTH_SESSION_TIME",31536000);
 }
 
 
-if (ENVIRONEMENT) {
-    error_reporting(-1);
-    ini_set('display_errors', 1);
+if (! defined('AUTH_ACTIVE'))
+{
+   define("AUTH_ACTIVE", true);
 }
-
 
