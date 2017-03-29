@@ -23,5 +23,5 @@
     "scripts": {
         "post-update-cmd": "php glial install composer",
         "post-install-cmd": "php glial install composer"
-    },
+    }
 }
