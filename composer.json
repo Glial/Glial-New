@@ -5,7 +5,7 @@
     "description": "Create a new project with Glial",
     "authors": [{
             "name": "Aurélien LEQUOY",
-            "email": "aurelien.lequoy@gmail.com",
+            "email": "timansl@hotmail.com",
             "homepage": "http://www.glial-framework-php.org/",
             "role": "Creator"
         }
@@ -17,12 +17,10 @@
         "glial/glial": "*"
     },
     "require-dev": {
-        "phpunit/phpunit": "*",
-        "fabpot/php-cs-fixer": "*"
+        "phpunit/phpunit": "*"
     },
     "scripts": {
-        "post-update-cmd": "php glial install composer",
-        "post-install-cmd": "php glial install composer"
+        "post-install-cmd": "./install"
     },
     "autoload": {
         "classmap": [
