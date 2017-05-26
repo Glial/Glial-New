@@ -1,0 +1,140 @@
+#!/bin/bash
+
+#check OSTYPE
+
+case "$OSTYPE" in
+  solaris*) OS="SOLARIS" ;;
+  darwin*)  OS="OSX" ;; 
+  linux*)   OS="LINUX" ;;
+  bsd*)     OS="BSD" ;;
+  msys*)    OS="WINDOWS" ;;
+  *)        OS="unknown: $OSTYPE" ;;
+esac
+
+if [ "$OS" != "LINUX" ]
+then
+    echo "This OS is not supported : $OS"
+    exit 1;
+else
+    echo "This OS is supported : $OS"
+fi
+
+
+#Check distribution GNU / Linux
+
+dist=`grep DISTRIB_ID /etc/*-release | awk -F '=' '{print $2}'`
+
+DIOK="OK"
+case "$dist" in
+  Ubuntu*) DISTRIB="Ubuntu" ;;
+  Debian*) DISTRIB="Debian" ;;
+  Redhat*) DISTRIB="RedHat" ;;
+  Centos*) DISTRIB="Centos" ;;
+  *)       
+        DISTRIB=$dist
+        DIOK="KO"
+ ;;
+esac
+
+if [ "$DIOK" != "OK" ]
+then
+    dist=`lsb_release -is`
+
+    DIOK="OK"
+
+    case "$dist" in
+      Ubuntu*) DISTRIB="Ubuntu" ;;
+      Debian*) DISTRIB="Debian" ;;
+      Redhat*) DISTRIB="RedHat" ;;
+      Centos*) DISTRIB="Centos" ;;
+      *)       
+            DISTRIB=$dist
+            DIOK="KO"
+     ;;
+    esac
+fi
+
+if [ "$DIOK" != "OK" ]
+then
+    echo "This distribution GNU/Linux is not supported : $DISTRIB"
+    exit 1;
+else
+    echo "This distribution GNU/Linux is supported : $DISTRIB"
+fi
+
+#check version supported
+# TODO
+
+
+workFolder=$(readlink -f $(dirname $0))
+path=`echo $workFolder | awk -F"/" ' { print $(NF) } '`
+
+cp -a config_sample/*.config.php configuration/
+cp -a config_sample/*.ini.php configuration/
+cp -a config_sample/*.ini configuration/
+
+cat > configuration/db.config.ini.php << EOF
+[noname]
+gg=fake_data
+gt=just the time to generate a good one
+EOF
+
+cat > configuration/db.config.php << EOF
+<?php
+ if (! defined('DB_DEFAULT'))
+ {
+     define("DB_DEFAULT", "glial");
+ }
+EOF
+
+cat >  configuration/webroot.config.php << EOF
+<?php
+
+/*
+ * if you use a direrct DNS set : define('WWW_ROOT', "/");
+ * if you dev in local or other use : define('WWW_ROOT', "/path_to_the_final_directory/");
+ * example : http://127.0.0.1/directory/myapplication/ => define('WWW_ROOT', "/directory/myapplication/");
+ * Don't forget the final "/"
+ */
+
+
+if (! defined('WWW_ROOT'))
+{
+    define('WWW_ROOT', "/$path/");
+}
+EOF
+
+chmod 777 -R tmp/
+
+
+
+#check composer && composer install
+
+if test -f ./vendor/glial/glial/Glial/Bootstrap.php; then
+   echo "Glial Installed !"
+else
+    composer -V foo >/dev/null 2>&1 || { echo >&2 "Glial require composer but it's not installed.  Aborting."; echo "To install composer : ";echo ""; echo "        curl -sS https://getcomposer.org/installer | php";  echo "        \$ mv composer.phar /usr/local/bin/composer"; echo ""; exit 1;}
+    composer install
+fi
+
+
+php application/webroot/index.php install index
+
+if [ $? != 0 ]; then
+    exit 1
+fi
+
+
+
+php application/webroot/index.php install createAdmin
+
+if [ $? != 0 ]; then
+    exit 3
+fi
+
+
+php application/webroot/index.php install success
+
+if [ $? != 0 ]; then
+    exit 3
+fi
