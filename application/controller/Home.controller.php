@@ -10,7 +10,7 @@ class Home extends Controller
         $this->layout_name = 'default';
 
 
-        $this->title = __("Home");
+        $this->title = '<span style="font-size:2rem" class="glyphicon glyphicon-home" aria-hidden="true"></span> '.__("Home");
         $this->ariane = " > " . __("Welcome to my first page with Glial !");
 
         //$this->javascript = array("");
