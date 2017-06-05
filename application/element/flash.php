@@ -5,8 +5,6 @@
 $doublon = array();
 
 
-debug($data);
-
 foreach($data as $line)
 {
    // if (! in_array($line['msg'],$doublon))

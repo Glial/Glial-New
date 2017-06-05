@@ -18,11 +18,14 @@ h5{font-weight: 700 }
 .footer-sitemap a{color:#bbb; font-size:14px }
 .footer-sitemap li.titre {color:#fff; font-size:18px; border-bottom:#ddd 1px solid;}
 
+
 .footer-container {background:#292b2c; color:#ddd; border-top:#000 1px solid}
 
 body{background: #fff}
 
-
+#crumbs {
+    margin-bottom: 10px;
+}
 
 #crumbs ul {
     list-style: none;
@@ -103,6 +106,8 @@ body{background: #fff}
 #crumbs ul li:last-child a:after {
     display: none; 
 }
+
+/*! debug toolbar */
 
 .debug {
     position: fixed;

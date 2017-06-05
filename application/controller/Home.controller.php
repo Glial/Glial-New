@@ -14,6 +14,9 @@ class Home extends Controller
         $this->ariane = " > " . __("Welcome to my first page with Glial !");
 
         //$this->javascript = array("");
+        
+        
+        $db = $this->di['db']->sql(DB_DEFAULT);
     }
 
     function test()
