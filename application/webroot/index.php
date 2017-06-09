@@ -19,6 +19,10 @@
  * @since         Gliale(tm) v 0.1
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
+
+
+use \Glial\Synapse\Glial;
+
 try {
 
     /*
@@ -108,7 +112,8 @@ finally {
           $stat->callDeamon(); */
     }
 
-
+	
+    Glial::AddStat($_DB->sql(DB_DEFAULT));
 
     if (!empty($e)) {
         exit($e->getCode());

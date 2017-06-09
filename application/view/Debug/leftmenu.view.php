@@ -304,7 +304,13 @@
 
 
 
+        <li class="nav-item">
+            <a class="nav-link" href="<?=LINK ?>debug/stats">
 
+
+                <span class="glyphicon glyphicon-stats" aria-hidden="true"></span> Statistiques
+            </a>
+        </li>
 
 
     </ul>
