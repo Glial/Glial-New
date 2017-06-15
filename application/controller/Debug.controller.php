@@ -89,10 +89,12 @@ class Debug extends Controller
 
         $sql ="SELECT * FROM statistics ORDER BY id DESC LIMIT 50";
 
-        $stats = array();
-        while ($arr = $db->sql_fetch_array($sql))
+        $res = $db->sql_query($sql);
+
+        $data = array();
+        while ($arr = $db->sql_fetch_array($res))
         {
-            $stats[] = $arr;
+            $data['stats'][] = $arr;
         }
 
         
