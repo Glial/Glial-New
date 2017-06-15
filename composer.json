@@ -19,9 +19,6 @@
     "require-dev": {
         "phpunit/phpunit": "*"
     },
-    "scripts": {
-        "post-install-cmd": "./install"
-    },
     "autoload": {
         "classmap": [
             "application/"
