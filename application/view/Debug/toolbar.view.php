@@ -116,28 +116,37 @@
                                               h0.529l24.374-55.502c0.394-0.924,1.058-1.328,2.252-1.328h11.652c0.798,0,1.328,0.529,1.328,1.328V298.675z"></path>
                                     </g>
                                 </svg>
-                                <?= $data['memories'] ?>
+<?= $data['memories'] ?>
 
                             </a>
                         </li>
 
-                        <li class="nav-item">
-                            <a class="nav-link" href="<?= LINK ?>debug/mysql/<?php echo $data['mysql'] ?>">
-                                <svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="16px" y="16px"
-                                     viewBox="0 0 303.002 303.002" style="enable-background:new 0 0 303.002 303.002;">
-                                    <g>
-                                        <path d="M151.501,0c66.75,0,123.194,27.559,125.104,60.549c-1.91,32.987-58.354,60.553-125.104,60.553
-                                              c-66.752,0-123.191-27.56-125.104-60.553C28.31,27.559,84.749,0,151.501,0z"/>
-                                        <path d="M276.785,240.744c0,33.747-57.369,62.258-125.284,62.258S26.217,274.491,26.217,240.744v-29.771
-                                              c21.449,25.754,68.887,43.27,125.284,43.27s103.834-17.521,125.284-43.27V240.744z"/>
-                                        <path d="M276.785,179.688c0,33.746-57.369,62.258-125.284,62.258S26.217,213.434,26.217,179.688v-31.009
-                                              c21.449,25.748,68.887,43.259,125.284,43.259s103.834-17.522,125.284-43.259V179.688z"/>
-                                        <path d="M276.785,117.381c0,33.748-57.369,62.257-125.284,62.257s-125.284-28.51-125.284-62.257V90.135
-                                              c21.449,25.754,68.887,43.258,125.284,43.258s103.834-17.51,125.284-43.258V117.381z"/>
-                                    </g>
-                                </svg> DB : <?= $data['queries'] ?> queries
-                            </a>
-                        </li>
+
+<?php
+foreach ($data['db'] as $name => $arr) {
+    ?>
+                            <li class="nav-item">
+                                <a class="nav-link" href="<?= LINK ?>debug/mysql/<?=$data['last_key'] ?>/<?php echo $name ?>">
+                                    <svg version="1.1" id="Capa_1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="16px" y="16px"
+                                         viewBox="0 0 303.002 303.002" style="enable-background:new 0 0 303.002 303.002;">
+                                        <g>
+                                            <path d="M151.501,0c66.75,0,123.194,27.559,125.104,60.549c-1.91,32.987-58.354,60.553-125.104,60.553
+                                                  c-66.752,0-123.191-27.56-125.104-60.553C28.31,27.559,84.749,0,151.501,0z"/>
+                                            <path d="M276.785,240.744c0,33.747-57.369,62.258-125.284,62.258S26.217,274.491,26.217,240.744v-29.771
+                                                  c21.449,25.754,68.887,43.27,125.284,43.27s103.834-17.521,125.284-43.27V240.744z"/>
+                                            <path d="M276.785,179.688c0,33.746-57.369,62.258-125.284,62.258S26.217,213.434,26.217,179.688v-31.009
+                                                  c21.449,25.748,68.887,43.259,125.284,43.259s103.834-17.522,125.284-43.259V179.688z"/>
+                                            <path d="M276.785,117.381c0,33.748-57.369,62.257-125.284,62.257s-125.284-28.51-125.284-62.257V90.135
+                                                  c21.449,25.754,68.887,43.258,125.284,43.258s103.834-17.51,125.284-43.258V117.381z"/>
+                                        </g>
+                                    </svg> <?= $name ?> : <?= $arr['queries'] ?> queries
+                                </a>
+                            </li>
+
+    <?php
+}
+?>
+
                         <li class="nav-item">
                             <a class="nav-link" href="">
                                 <svg version="1.1" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 129 129" xmlns:xlink="http://www.w3.org/1999/xlink" enable-background="new 0 0 129 129">
@@ -194,7 +203,7 @@
                         </li>
 
                         <li class="nav-item">
-                            <a class="nav-link" href="">
+                            <a class="nav-link" href="<?= LINK ?>debug/variables/<?=$data['last_key'] ?>">
                                 <svg version="1.1" id="_x32_" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" x="0px" y="0px" viewBox="0 0 512 512" xml:space="preserve">
                                     <g>
                                         <path class="st0" d="M449.891,87.953c-3.766-8.906-10.031-16.438-17.922-21.781c-7.891-5.328-17.5-8.469-27.719-8.469h-42.656
@@ -218,7 +227,7 @@
                                         <rect x="225.516" y="357.594" class="st0" width="130.359" height="31.625"></rect>
                                     </g>
                                 </svg>
-                                Request : <?= $data['request'] ?>
+                                Request : <?= $data['variables'] ?>
                             </a>
                         </li>
                         <li class="nav-item">
@@ -250,9 +259,9 @@
                 <h4 class="modal-title" id="myModalLabel"><?= __("Droit d'accès", "fr") ?></h4>
             </div>
             <div class="modal-body">
-                <?php
-                echo $data['acl'];
-                ?>
+<?php
+echo $data['acl'];
+?>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-primary" data-dismiss="modal">Close</button>

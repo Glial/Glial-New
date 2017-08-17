@@ -7,7 +7,6 @@
  */
 
 
-
 if (count($data['mysql']) != 0) {
     echo "<table id=\"table\" class=\"table table-condensed table-bordered table-striped\">";
     echo "<tr><th>#</th><th>File</th><th>Line</th><th>Query</th><th>Rows</th><th>Last inserted id</th><th>Time</th></tr>";

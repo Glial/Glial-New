@@ -37,7 +37,7 @@ echo "<title>" . strip_tags($GLIALE_TITLE) . " - " . SITE_NAME . "</title>\n";
 
 
     <header id="header">
-        <?= FactoryController::addNode("Debug", "header", array($GLIALE_TITLE)); ?>
+        <?= FactoryController::addNode("Debug", "header", array()); ?>
     </header>
 
     
@@ -45,8 +45,10 @@ echo "<title>" . strip_tags($GLIALE_TITLE) . " - " . SITE_NAME . "</title>\n";
     
     <div class="container-fluid">
         <div class="row">
-            
-            <?= FactoryController::addNode("Debug", "leftmenu", $GLIALE_TITLE); ?>
+
+
+
+            <?= FactoryController::addNode("Debug", "leftmenu", $GLIALE_DATA); ?>
             
             
 
