@@ -11,3 +11,10 @@ if (! defined('GOOGLE_NB_CHAR_MAX'))
 {
     define('GOOGLE_NB_CHAR_MAX', 1200);
 }
+
+
+if (! defined('LANGUAGE_ACTIVE'))
+{
+    define("LANGUAGE_ACTIVE", false);
+}
+

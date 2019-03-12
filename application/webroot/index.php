@@ -113,7 +113,7 @@ finally {
     }
 
 	
-    Glial::AddStat($_DB->sql(DB_DEFAULT));
+    //Glial::AddStat($_DB->sql(DB_DEFAULT));
 
     if (!empty($e)) {
         exit($e->getCode());
