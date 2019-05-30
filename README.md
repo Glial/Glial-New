@@ -29,16 +29,8 @@ install a new project (install in current directory, will create a new dir)
 `$ composer create-project -s dev --keep-vcs glial/new-project my_glial_project`
 
 
-update `configuration/db.config.ini.php`
-
-update `webroot.config.php`
-
-
-`cd myproject/application/webroot`
-
-`php index.php administration admin_table`
-
-`php index.php administration admin_init`
+```
+./install
 
 
 You are ready to work !
