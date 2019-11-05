@@ -8,6 +8,6 @@ if (!defined('AUTH_SESSION_TIME')) {
 
 if (! defined('AUTH_ACTIVE'))
 {
-   define("AUTH_ACTIVE", true);
+   define("AUTH_ACTIVE", false);
 }
 
