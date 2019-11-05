@@ -118,7 +118,7 @@ else
 fi
 
 
-php application/webroot/index.php install index
+php App/Webroot/index.php install index
 
 if [ $? != 0 ]; then
     exit 1
@@ -126,14 +126,14 @@ fi
 
 
 
-php application/webroot/index.php install createAdmin
+php App/Webroot/index.php install createAdmin
 
 if [ $? != 0 ]; then
     exit 3
 fi
 
 
-php application/webroot/index.php install success
+php App/Webroot/index.php install success
 
 if [ $? != 0 ]; then
     exit 3
