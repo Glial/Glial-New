@@ -1,0 +1,131 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : Jun 4, 2017, 10:32:10 AM
+    Author     : aurelien
+*/
+
+/*
+ * Base structure
+ */
+
+/* Move down content because we have a fixed navbar that is 50px tall */
+body {
+  padding-top: 50px;
+}
+
+/*
+ * Typography
+ */
+
+h1 {
+  margin-bottom: 20px;
+  padding-bottom: 9px;
+  border-bottom: 1px solid #464646;
+}
+
+
+
+header .navbar{background: #292b2c; box-shadow: 0 2px 5px rgba(0,0,0,0.5);}
+
+
+
+/*
+ * Sidebar
+ */
+
+.sidebar {
+  position: fixed;
+  top: 36px;
+  bottom: 0;
+  left: 0;
+  z-index: 1000;
+  padding: 20px;
+  overflow-x: hidden;
+  overflow-y: auto; /* Scrollable contents if viewport is shorter than content. */
+
+  
+  box-shadow: 4px 0 5 5 rgba(0, 0, 0, 0.7);
+  background: #464646;
+  
+  box-shadow: 2px 0px 5px rgba(0,0,0,0.5);
+
+}
+
+
+
+
+/* Sidebar navigation */
+.sidebar {
+  padding-left: 0;
+  padding-right: 0;
+}
+
+.sidebar .nav {
+  margin-bottom: 20px;
+}
+
+.sidebar .nav-item {
+  width: 100%;
+}
+
+.sidebar .nav-item + .nav-item {
+  margin-left: 0;
+}
+
+.sidebar .nav-link {
+  border-radius: 0;
+  color: #ddd;
+}
+
+.sidebar .nav-link:hover {
+  background: #666666;
+  color: #fff;
+}
+
+
+
+.sidebar ul li 
+{
+    list-style: none;
+}
+
+
+/*
+ * Dashboard
+ */
+
+ /* Placeholders */
+.placeholders {
+  padding-bottom: 3rem;
+}
+
+.placeholder img {
+  padding-top: 1.5rem;
+  padding-bottom: 1.5rem;
+}
+
+svg {
+    height:20px;
+    fill:#ffffff;
+    margin: -3px auto;
+}
+
+
+
+
+/*! debug layout */
+
+.table-bordered {
+    border: 1px solid #ccc;
+}
+
+.table-bordered > thead > tr > th, .table-bordered > tbody > tr > th, .table-bordered > tfoot > tr > th, .table-bordered > thead > tr > td, .table-bordered > tbody > tr > td, .table-bordered > tfoot > tr > td {
+    border: 1px solid #ccc;
+}
+
+
+table.explain th, table.explain td {border-color: #ffffff;}
