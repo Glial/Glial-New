@@ -1,0 +1,149 @@
+/* put your custom css there */
+
+h2{border-bottom: #000 1px solid; padding-top:10px; margin-bottom: 10px}
+h3{border-bottom: #000 1px solid; }
+h4{border-bottom: #000 1px dotted; }
+h5{font-weight: 700 }
+
+.header-top {background: #292b2c; }
+.header-top nav {padding:0}
+
+.header-banner {background: #000 url('../image/glial/glial.jpg') left 20% no-repeat; height:200px; }
+
+.header-nav{background: #292b2c; box-shadow: 0 2px 5px rgba(0,0,0,0.5);}
+
+.footer-separator {background:rgb(2, 117, 216); height:5px; box-shadow: 0px -2px 5px rgba(2, 117, 216,0.8);}
+
+.footer-sitemap {background: #292b2c; }
+.footer-sitemap a{color:#bbb; font-size:14px }
+.footer-sitemap li.titre {color:#fff; font-size:18px; border-bottom:#ddd 1px solid;}
+
+
+.footer-container {background:#292b2c; color:#ddd; border-top:#000 1px solid}
+
+body{background: #fff}
+
+#crumbs {
+    margin-bottom: 10px;
+}
+
+#crumbs ul {
+    list-style: none;
+    display: inline-table;
+    background: #fff;
+    border-radius: 5px;
+    margin: 0;
+    padding:0;
+}
+#crumbs ul li {
+    display: inline;
+}
+
+#crumbs ul li a {
+    display: block;
+    float: left;
+    line-height: 30px;
+    background: #292b2c;
+    text-align: center;
+    padding: 0px 10px 0 20px;
+    position: relative;
+    margin: 0 2px 0 0; 
+
+    font-size: 16px;
+    text-decoration: none;
+    color: #fff;
+}
+#crumbs ul li a:after {
+    content: "";  
+    border-top: 15px solid transparent;
+    border-bottom: 15px solid transparent;
+    border-left: 15px solid #292b2c;
+    position: absolute; right: -15px; top: 0;
+    z-index: 1;
+}
+
+#crumbs ul li a:before {
+    content: "";  
+    border-top: 15px solid transparent;
+    border-bottom: 15px solid transparent;
+    border-left: 15px solid #fff;
+    position: absolute; left: 0; top: 0;
+}
+
+#crumbs ul li:first-child a {
+    border-top-left-radius: 5px; border-bottom-left-radius: 5px;
+}
+
+
+#crumbs ul li:first-child a:before {
+    display: none; 
+}
+
+#crumbs ul li:last-child a {
+    padding-right: 10px;
+}
+
+#crumbs ul li a.active{background:rgb(2, 117, 216)}
+#crumbs ul li a.active:hover{background:#fff;color:#000;}
+
+#crumbs ul li a:hover {
+    background: #fff;
+    color:#000;
+}
+#crumbs ul li a:hover:after {
+    border-left-color: #fff;
+}
+
+#crumbs ul li a:hover:after {
+    border-left-color: #fff;
+}
+
+
+#crumbs ul li:last-child a {
+    padding-right: 30px;
+    border-top-right-radius: 10px; border-bottom-right-radius: 10px;
+}
+#crumbs ul li:last-child a:after {
+    display: none; 
+}
+
+/*! debug toolbar */
+
+.debug {
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    padding: 0px;
+    color:#fff;
+    background-color: #000;
+    border-top: #333 1px solid;
+}
+
+.debug-height
+{
+    height:2.5rem
+}
+
+svg {
+    height:16px;
+    fill:#ffffff;
+    margin: -3px auto;
+}
+
+.debug a:hover{
+    background:#333;
+}
+
+.debug a{
+    vertical-align: 20%;
+}
+
+.debug  div .navbar-nav{
+    padding: 0;
+    background:#000;
+}
+
+.debug .navbar-default, .debug nav div nav
+{
+    padding: 0;
+}
