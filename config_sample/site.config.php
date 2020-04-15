@@ -25,9 +25,9 @@ if (!defined('SITE_LOGO')) {
 
 
 if (!defined('SITE_VERSION')) {
-    define("SITE_VERSION", "v5.0");
+    define("SITE_VERSION", "v5.1.8");
 }
 
 if (!defined('SITE_LAST_UPDATE')) {
-    define("SITE_LAST_UPDATE", "2019-11-05");
+    define("SITE_LAST_UPDATE", "2020-04-15");
 }
