@@ -25,13 +25,10 @@ install composer
 
 install a new project (install in current directory, will create a new dir)
 
-
-`$ composer create-project --keep-vcs glial/new-project:5.1.9 --prefer-dist my_glial_project`
-
-
-
 ```
-./install
+$ composer create-project --keep-vcs glial/new-project:5.1.9 --prefer-dist my_glial_project`
 
+./install
+```
 
 You are ready to work !
