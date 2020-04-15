@@ -28,9 +28,9 @@
                 <ul class="list-unstyled">
                     
                     <li class="titre">Dépendances</li>
-                    <li><a href="#">Linux (degraded on windows with daemon and cli)</a></li>
-                    <li><a href="#">PHP 5.5 or better</a></li>
-                    <li><a href="#">modrewrite of Apache</a></li>
+                    <li><a href="#">Linux (dégradé sur windows)</a></li>
+                    <li><a href="#">PHP 5.5 ou plus récent</a></li>
+                    <li><a href="#">modrewrite d'Apache</a></li>
                     <li><a href="#">curl</a></li>
 
                 </ul>

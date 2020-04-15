@@ -6,10 +6,6 @@
             </button>
 
 
-
-
-
-
             <div class="collapse navbar-collapse" id="navbarsExampleDefault3">
 
                 <ul class="navbar-nav mr-auto">
@@ -74,7 +70,7 @@
         </ol>
         <div class="carousel-inner" role="listbox">
             <div class="carousel-item active">
-                <img class="first-slide" src="<?= IMG ?>glial/glialcell.png" alt="First slide">
+                <img class="first-slide" style="width: 100%; min-height: 100%;" src="<?= IMG ?>glial/glialcell.png" alt="First slide">
                 <div class="container">
                     <div class="carousel-caption d-none d-md-block text-left">
                         <h1>Glial 5.0 est maintenant disponible !</h1>
@@ -84,7 +80,7 @@
                 </div>
             </div>
             <div class="carousel-item">
-                <img class="second-slide" src="<?= IMG ?>glial/speed2.png" alt="Second slide">
+                <img class="second-slide" style="width: 100%; min-height: 100%;" src="<?= IMG ?>glial/speed2.png" alt="Second slide">
 
                 <div class="container">
                     <div class="carousel-caption d-none d-md-block text-left">
@@ -95,7 +91,7 @@
                 </div>
             </div>
             <div class="carousel-item">
-                <img class="third-slide" src="<?= IMG ?>glial/inno.jpg" alt="Third slide">
+                <img class="third-slide" style="width: 100%; min-height: 100%;" src="<?= IMG ?>glial/inno.jpg" alt="Third slide">
                 <div class="container">
                     <div class="carousel-caption d-none d-md-block text-right">
                         <h1>Pourquoi Glial ?</h1>

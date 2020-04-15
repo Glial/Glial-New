@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use \Glial\Synapse\Controller;
+use \Glial\Sgbd\Sgbd;
 
 class Home extends Controller
 {
@@ -18,7 +19,7 @@ class Home extends Controller
         //$this->javascript = array("");
 
 
-        $db = $this->di['db']->sql(DB_DEFAULT);
+        $db = Sgbd::sql(DB_DEFAULT);
     }
 
     function test()
