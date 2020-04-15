@@ -1,6 +1,6 @@
 {
     "name": "glial/new-project",
-    "version": "v5.1.8",
+    "version": "v5.1.9",
     "license": "GPL-3.0",
     "description": "Create a new project with Glial",
     "authors": [{
@@ -13,7 +13,7 @@
     "require": {
         "php": ">=7.0",
         "ext-gd": "*",
-        "glial/glial": "5.1.8"
+        "glial/glial": "5.1.9"
     },
     "require-dev": {
         "phpunit/phpunit": "7.*"
