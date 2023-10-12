@@ -1,6 +1,6 @@
 {
     "name": "glial/new-project",
-    "version": "v5.1.14",
+    "version": "v5.1.15",
     "license": "GPL-3.0",
     "description": "Create a new project with Glial",
     "authors": [{
